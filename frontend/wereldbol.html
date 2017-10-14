@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Skyscanner app</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="http://www.webglearth.com/v2/api.js"></script>
+    <script>
+      var earth;
+      var anim = true;
+      function initialize() {
+        earth = new WE.map('earth_div');
+        earth.setView([46.8011, 8.2266], 3);
+        earth.setZoom(2);
+         WE.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+        }).addTo(earth);
+
+        // Start a simple rotation animation
+        var before = null;
+        var up = true;
+
+       
+        requestAnimationFrame(function animate(now) {
+            if (anim == true) {
+                var c = earth.getPosition();
+                var elapsed = before? now - before: 0;
+                before = now;
+                if ( c[0] > 85) {
+                    up = false;
+                    earth.setCenter([c[0] - 0.4*(elapsed/5), c[1] + 0.4*(elapsed/1)]);  
+                }
+                else if (c[0] < 10) {
+                    up = true;
+                    earth.setCenter([c[0] + 0.4*(elapsed/5), c[1] + 0.4*(elapsed/1)]);  
+                }
+                else {
+                    if (up) {
+                        earth.setCenter([c[0] + 0.4*(elapsed/5), c[1] + 0.4*(elapsed/1)]);  
+                    }  else {
+                        earth.setCenter([c[0] - 0.4*(elapsed/5), c[1] + 0.4*(elapsed/1)]);  
+                    }
+                }
+
+                requestAnimationFrame(animate);
+            } 
+        });
+
+        var showInfo = function(e) {
+            WE.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(earth);
+    
+            var marker = WE.marker([e.latitude, e.longitude]).addTo(earth);
+            marker.bindPopup("<b>Location pinned!</b><br><br/><span style='font-size:10px;color:#999'>Let's now find you the closest destination...</span>", {maxWidth: 150, closeButton: true}).openPopup();
+    
+    
+           // var markerCustom = WE.marker([e.latitude, e.longitude], 'logo-webglearth-white-100.png', 100, 24).addTo(earth);
+    
+            earth.panTo([e.latitude, e.longitude],  {animate: true, duration: 0.5});
+            anim = false;
+            earth.off('click');
+        }
+        earth.on('click', showInfo);
+        console.log('print');
+
+       
+      }
+    </script>
+    <style type="text/css">
+      html, body{padding: 0; margin: 0;}
+      #earth_div{
+          top: 0; right: 0; bottom: 0; left: 0;
+                 position: absolute !important;
+      }
+    </style> 
+    <title>Map</title>
+  </head>
+
+  
+  <body>
+    <div id="earth_div"></div>
+  </body>
+</html>
