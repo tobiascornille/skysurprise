@@ -14,7 +14,7 @@ def roadtrip_list(request, format=None):
         roadtrips = Roadtrip.objects.all()
         lastRoadtrip = RoadtripSerializer(Roadtrip.objects.last(), many=False)
         # serializer = RoadtripSerializer(roadtrips, many=True)
-        print(lastRoadtrip.data['source'])
+        # print(lastRoadtrip.data['source'])
         return Response(lastRoadtrip.data)
 
     elif request.method == 'POST':
