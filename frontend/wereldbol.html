@@ -93,9 +93,74 @@
               }
           }
 
+          var data2 = [
+                            {
+                                "from_destination_long":"51.98",
+                                "from_destination_lat":"21.98",
+                                "from_destination_placename":"Brussels",
+                                "to_destination_long":"81.98",
+                                "to_destination_lat":"21.98",
+                                "to_destination_placename":"Barcelona",
+                                "departure_flight":"2017-05-30T06:50:00",
+                                "arrival_flight":"2017-05-30T06:50:00",
+                                "price_flight": "25",
+                                " hotel":"Hilton",
+                                "price_hotel":"266",
+                                "checkout_hotel":"2017-05-30T06:50:00",
+                            },
+                            {
+                                "from_destination_long":"81.98",
+                                "from_destination_lat":"11.98",
+                                "from_destination_placename":"Brussels",
+                                "to_destination_long":"81.98",
+                                "to_destination_lat":"21.98",
+                                "to_destination_placename":"Barcelona",
+                                "departure_flight":"2017-05-30T06:50:00",
+                                "arrival_flight":"2017-05-30T06:50:00",
+                                "price_flight": "25",
+                                " hotel":"Kuala Lumpur hostel",
+                                "price_hotel":"266",
+                                "checkout_hotel":"2017-05-30T06:50:00",
+                            }]
+
+                            sessionStorage.path = JSON.stringify(data2);
+                       
+                        setTimeout(function(){ window.location.href="surprisetrip.html"; },1000);
+
             $http.post('http://127.0.0.1:8000/questions/', data, config)
                     .success(function (data, status, headers, config) {
                         $scope.PostDataResponse = data;
+                        var data = [
+                            {
+                                "from_destination_long":"81.98",
+                                "from_destination_lat":"21.98",
+                                "from_destination_placename":"Brussels",
+                                "to_destination_long":"81.98",
+                                "to_destination_lat":"21.98",
+                                "to_destination_placename":"Barcelona",
+                                "departure_flight":"2017-05-30T06:50:00",
+                                "arrival_flight":"2017-05-30T06:50:00",
+                                "price_flight": "25",
+                                " hotel":"HotelId",
+                                "price_hotel":"266",
+                                "checkout_hotel":"2017-05-30T06:50:00",
+                            },
+                            {
+                                "from_destination_long":"81.98",
+                                "from_destination_lat":"21.98",
+                                "from_destination_placename":"Brussels",
+                                "to_destination_long":"81.98",
+                                "to_destination_lat":"21.98",
+                                "to_destination_placename":"Barcelona",
+                                "departure_flight":"2017-05-30T06:50:00",
+                                "arrival_flight":"2017-05-30T06:50:00",
+                                "price_flight": "25",
+                                " hotel":"HotelId",
+                                "price_hotel":"266",
+                                "checkout_hotel":"2017-05-30T06:50:00",
+                            }]
+
+                            sessionStorage.path = JSON.stringify(data);
                        
                         setTimeout(function(){ window.location.href="surprisetrip.html"; },1000);
                         

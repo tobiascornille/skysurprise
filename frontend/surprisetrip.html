@@ -30,10 +30,13 @@
             <div id='content3'>
             <div id="title-surprise-trip"><h1>You're going on a _trip!</h1></div>
             <div id="map"></div>
-            <a id="booktrip" href=""><span>Book my trip</span><img width="30px" src="suprise_me_icon.png"></a>
+            <a id="booktrip" href="detailstrip.html"><span>Get more details</span><img width="30px" src="suprise_me_icon.png"></a>
     </div>
     <script>
       function initMap() {
+        var path = JSON.parse(sessionStorage.path);
+        console.log(path);
+
           var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 2,
             center: {
@@ -42,9 +45,17 @@
             },
             mapTypeId: google.maps.MapTypeId.TERRAIN
           });
-        
-          var Lat = [42.365843, 50, 70, 28.431450, 52, 27,42.365843];
-          var Lng = [-71.009625, 23,40, -81.308094, -77.037227, -118.289537, -71.009625];
+
+          var Lat = [];
+          var Lng = [];
+          for (var i=0; i<path.length;i++) {
+            Lat.push(path[i].from_destination_lat);
+            Lng.push(path[i].from_destination_long);
+          }
+
+          console.log(Lat);
+          console.log(Lng);
+
 
 
           var symbolOne = {
