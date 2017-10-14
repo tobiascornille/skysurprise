@@ -4,13 +4,19 @@
 }
 
 html {
-	background-image: url('bg.jpg');
-	background-size: cover;
-	margin: 0;
+
 }
 
 body {
 	margin: 0;
+}
+
+a > img,
+a > span
+{
+  vertical-align: middle;
+  font-family: -apple-system,BlinkMacSystemFont,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,Arial,sans-serif;
+  padding:5px;
 }
 
 h1 {
@@ -27,8 +33,8 @@ h2 {
 	font-size: 50pt;
 	font-weight: bold;
 	font-family: airways;
-	margin:0;
 	margin:auto;
+	padding-top:100px;
 	width: 400px;
 }
 
@@ -42,19 +48,25 @@ h2 {
     display: inline-block;
     font-size: 20pt;
     border-radius: 40px;
-		margin-top: 230px;
-		width: 300px;
+	margin-top: 350px;
+	width: 300px;
 }
 
 #header {
-	background-color: white;
-	padding: 10px;
+	background-color: rgba(255,255,255,0.6);
+	padding: 30px;
 	width:100vw;
-	box-shadow: 0px 10px 10px white;
-	margin-bottom:30px;
+	height:70px;
+}
+
+#header > img {
+	margin-top:-10px;
 }
 
 #content {
 	text-align: center;
-	margin:20px;
+	background-image: url('bg.jpg');
+	background-size: cover;
+	height:calc(100% - (90px)); 
+	margin-top:-30px;
 }
