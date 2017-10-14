@@ -70,3 +70,30 @@ h2 {
 	height:calc(100% - (90px)); 
 	margin-top:-30px;
 }
+
+#question_form table {
+    color: white;
+    font-size: 20pt;
+    border-collapse: collapse; 
+}
+
+#question_form td {
+  padding-bottom: 30px;
+}
+
+#question_form input {
+    width: 400px;
+    height: 30px;
+}
+
+#submitquestions {
+    background-color: #38c5d8;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12pt;
+    border-radius: 40px;
+		width: 250px;
+		height: 50px;
+}
