@@ -78,7 +78,7 @@
 
           console.log(data);
 
-          $http.post('/ServerRequest/PostDataResponse', data, config)
+          $http.post('http://127.0.0.1:8000/questions.html/', data, config)
           .success(function (data, status, headers, config) {
               $scope.PostDataResponse = data;
           })
