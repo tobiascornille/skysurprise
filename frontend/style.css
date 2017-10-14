@@ -85,6 +85,15 @@ h2 {
 	background-size:cover;
 }
 
+
+#content3 {
+	text-align: center;
+	/* background:transparen /t; */
+	height:92vh;
+	/* background-size:cover; */
+	margin-top:-1%;
+}
+
 #question_form {
 	padding-top: 2%;
 	width: 70%;
@@ -215,4 +224,40 @@ h2 {
 	to {
 	  stroke-dashoffset: 0;
 	}
+  }
+
+
+  #title-surprise-trip {
+	font-family: -apple-system,BlinkMacSystemFont,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,Arial,sans-serif;
+	font-size:10%;
+	color:darkgray;
+	z-index:500;
+	padding-top:2%;
+	width:100%;
+  }
+
+  #title-surprise-trip h1{
+	 width:100%;
+	 background-color:rgba(0,0,0,0.4);
+	 padding:0.5%;
+  }
+
+  #map {
+	  margin-top:-8%;
+	  z-index:-1;
+  }
+
+  #booktrip {
+	background-color: rgba(0,0,0,0.4);
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 20pt;
+    border-radius: 40px;
+	width: 20%;
+	z-index:500;
+	position:absolute;
+	bottom:10%;
+	left:40%;
   }
