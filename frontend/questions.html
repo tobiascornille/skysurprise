@@ -69,16 +69,18 @@
               budget: $scope.budget,
               rooms: $scope.rooms
           };
+		  
       
           var config = {
               headers : {
-                  'Content-Type': 'application/json; charset=utf-8'
+                  'Content-Type': 'application/json; charset=utf-8',
+				  'Authorization' : 'Basic YWRtaW46aGFja3VwY2FkbWlu'
               }
           }
 
           console.log(data);
 
-          $http.post('http://127.0.0.1:8000/questions.html/', data, config)
+          $http.post('http://127.0.0.1:8000/questions/', data, config)
           .success(function (data, status, headers, config) {
               $scope.PostDataResponse = data;
           })

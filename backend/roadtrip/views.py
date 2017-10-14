@@ -9,6 +9,8 @@ from backend.roadtrip.serializers import RoadtripSerializer
 
 @api_view(['GET', 'POST'])
 def roadtrip_list(request, format=None):
+    print 'request'
+    print request
     if request.method == 'GET':
         roadtrips = Roadtrip.objects.all()
         serializer = RoadtripSerializer(roadtrips, many=True)
@@ -16,7 +18,9 @@ def roadtrip_list(request, format=None):
 
     elif request.method == 'POST':
         serializer = RoadtripSerializer(data=request.data)
+        print 'test'
         if serializer.is_valid():
+            print 'valid'
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
