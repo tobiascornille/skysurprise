@@ -1,6 +1,5 @@
-from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from roadtrip.models import Roadtrip
+from backend.roadtrip.models import Roadtrip
 
 
 class RoadtripSerializer(serializers.ModelSerializer):
