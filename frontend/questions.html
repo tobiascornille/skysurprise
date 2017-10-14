@@ -117,6 +117,8 @@
 		  var lowercaseQuery = angular.lowercase(query);
 		  var url = "http://partners.api.skyscanner.net/apiservices/autosuggest/v1.0/UK/GBP/en-GB/?query="+ lowercaseQuery + "&apiKey=ha299393881404988495032524468396";
 
+		  console.log(query!="");
+		if(query != "") {
 		  $http.get(url)
 		  .success(function (response) {
               $scope.airports = response.Places;
@@ -124,7 +126,10 @@
           .error(function (response) {
 			  console.log('error');
 			  console.log(response);
-          });
+		  });
+		} else {
+			$scope.airports = [];
+		}
 	  }
 	  
 	  $scope.selected = function(item) {
