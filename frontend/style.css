@@ -25,7 +25,7 @@ h1 {
 	font-weight: bold;
 	font-family: airways;
 	margin:auto;
-	width: 400px;
+	width: 20%;
 }
 
 h2 {
@@ -34,8 +34,8 @@ h2 {
 	font-weight: bold;
 	font-family: airways;
 	margin:auto;
-	padding-top:100px;
-	width: 400px;
+	padding-top:6%;
+	width: 20%;
 }
 
 #surpriseme {
@@ -48,27 +48,27 @@ h2 {
     display: inline-block;
     font-size: 20pt;
     border-radius: 40px;
-	margin-top: 350px;
-	width: 300px;
+	margin-top: 22%;
+	width: 20%;
 }
 
 #header {
 	background-color: rgba(255,255,255,0.6);
-	padding: 30px;
 	width:100vw;
-	height:70px;
+	padding-top:2%;
+	padding-left:2%;
+	height:8%;
 }
 
 #header > img {
-	margin-top:-10px;
+	
 }
 
 #content {
 	text-align: center;
 	background-image: url('bg.jpg');
 	background-size: cover;
-	height:calc(100% - (90px)); 
-	margin-top:-30px;
+	height:92%;
 }
 
 #question_form table {
