@@ -60,119 +60,116 @@ class RoadtripData:
         self.flightbudget = budget / 2
         self.hotelbudget = budget / 2
         self.rooms = rooms
-        self.cities = []
-        self.hotels = []
         self.days_per_city = 3
         self.apikey = 'prtl6749387986743898559646983194'
+        self.tracker = Tracker
 
         with open("backend\city_names.pkl", 'rb') as f:
             self.cities_overview = pickle.load(f)
 
-
     def plan_trip(self):
-        day_in_planning = self.inbounddate
-        obj_inbounddate = date_string_to_object(self.inbounddate)
+        current_day = self.inbounddate
+        obj_inbounddate = date_string_to_object(current_day)
 
-        # find nearest city from given (random) location
-        self.add_starting_city()
-        if len(self.cities) == 0:
+        first_flight = self.get_first_flight()
+
+        if(first_flight != None):
+            self.tracker.flights.append(first_flight)
+        else:
             print("couldn't find a trip for you")
             return
 
-        last_city = self.cities[-1]
-        # substract the cost to go to this city
-        #   is already done in the previous function
+        last_city = self.tracker.get_last_city()
 
-        # update day_in_planning
-        day_in_planning = calculate_new_date(day_in_planning, self.days_per_city)
+        current_day = calculate_new_date(current_day, self.days_per_city)
+        obj_next_day = date_string_to_object(calculate_new_date(current_day, self.days_per_city))
 
-        obj_next_day_in_planning = date_string_to_object(calculate_new_date(day_in_planning, self.days_per_city))
-
-        # add as much extra cities as possible within the flightbudget,
+        # add as much extra flights as possible within the flightbudget,
         # keeping in mind that we also have to get home in time
-        while (self.flightbudget - self.get_flightprice(last_city, self.originplace, self.inbounddate)) > 0 and obj_next_day_in_planning <= obj_inbounddate:
-            self.add_city(last_city, day_in_planning, self.days_per_city)
-            last_city = self.cities[-1]
+        while (self.flightbudget - self.get_flight_price(last_city, self.originplace, self.inbounddate)) > 0 \
+                and obj_next_day < obj_inbounddate:
 
-            day_in_planning = calculate_new_date(day_in_planning, self.days_per_city)
-            obj_next_day_in_planning = date_string_to_object(day_in_planning)
+            flight = self.get_flight(last_city, current_day, self.days_per_city)
+            self.tracker.flights.append(flight)
+            last_city = self.tracker.get_last_city()
 
-        # terugvlucht moeten aftrekken
+            current_day = calculate_new_date(current_day, self.days_per_city)
+            obj_next_day = date_string_to_object(current_day)
+
+        # return flight
+        self.tracker.flights.append(self.get_last_flight())
+
+        # add the remaining flight money to the hotel budget
+        self.hotelbudget += self.flightbudget
+        self.flightbudget = 0
         
-        # after finding all our locations, we'll have to find a place to stay for the night
+        # after finding all our locations, we'll have to find a place to stay for every city
+        for index in range(1, len(self.tracker.flights) - 1):
+            hotel = self.get_hotel(index)
+            self.tracker.hotels.append(hotel)
 
-    def get_id(self, city_name):
-        resp = requests.get(
-            'http://gateway.skyscanner.net/autosuggest/v3/hotels?q=%s&market=US&locale=en-US&apikey=7772cbd8f1a640ffa9536d96d4c3c48e' % city_name)
-        return resp.json()['results'][0]['id']
-
-
-    def add_hotel(self, city, checkindate, checkoutdate, currenthotelnumber):
-        cityid = self.get_id(city)
-        thishotelbudget = self.hotelbudget / (len(self.cities) - currenthotelnumber)
-
-        link = "https://gateway.skyscanner.net/hotels/v1/prices/search/entity/{}?market={}&locale={}" \
-               "&checkin_date={}&checkout_date={}&currency={}&adults={}&rooms={}&price_max={}&sort={}?apikey={}".format(
-                cityid, self.country, self.locale, checkindate, checkoutdate, self.currency, self.rooms, self.adults,
-                thishotelbudget, "rating", "7772cbd8f1a640ffa9536d96d4c3c48e")
-
-        hotels = requests.get(link, headers={"x-user-agent": "D;B2B"})
-
-        while hotels.json()["meta"]["status"] != 'COMPLETED':
-            hotels = requests.get(link)
-
-        self.hotelbudget -= hotels["offers"][0]
-        self.hotels.append(hotels["results"][0])
-
-
-    def add_starting_city(self):
+    def get_first_flight(self):
         limit = 100
         radius = 10000
         latitude = self.latitude
         longitude = self.longitude
-        citiesreq = requests.get('http://getnearbycities.geobytes.com/GetNearbyCities?callback=?&latitude={}&longitude={}&'
+        citiesrequest = requests.get('http://getnearbycities.geobytes.com/GetNearbyCities?callback=?&latitude={}&longitude={}&'
                               'radius={}&limit={}'.format(latitude, longitude, radius, limit))
-        citiestext = citiesreq.text[2:-2]
+        citiestext = citiesrequest.text[2:-2]
         citieslist = eval(citiestext)
 
         end_date = calculate_new_date(self.outbounddate, self.days_per_city)
 
         for city in citieslist:
             price = self.get_connection_price(self.originplace, city, self.outbounddate, end_date)
-            if price != -1:
+            if price != -1 and price <= 0.25 * self.flightbudget:
                 self.flightbudget -= price
-                self.cities.append(city)
-                return
+                return {'from_destination': self.originplace,
+                        'to_destination': city,
+                        'departure_flight': self.outbounddate,
+                        'arrival_flight': end_date,
+                        'price_flight': price}
 
-        print("failed to find a new city. Abort mission")
+        print("failed to find a first city")
 
-
-    def add_city(self, current_city, start_date, nb_days):
+    def get_flight(self, current_city, start_date, nb_days):
         end_date = calculate_new_date(start_date, nb_days)
-        price = self.get_connection_price(current_city, "everywhere", start_date, end_date)
+        price, destination = self.get_connection_price(current_city, "everywhere", start_date, end_date)
+
         if price == -1:
-            print("failed to find a new city. Abort mission")
-            return
+            print("failed to find a new city")
+            return None
         else:
             self.flightbudget -= price
-            self.cities.append(current_city)
+            return {'from_destination': current_city,
+                    'to_destination': destination,
+                    'departure_flight': start_date,
+                    'arrival_flight': end_date,
+                    'price_flight': price}
+
+    def get_last_flight(self, current_city, start_date):
+        price = self.get_connection_price(current_city, self.originplace, start_date, self.inbounddate)
+
+        if price > self.flightbudget:
+            print("How did we let this happen? :(")
+            return None
+        else:
+            self.flightbudget -= price
+            return {'from_destination': current_city,
+                    'to_destination': self.originplace,
+                    'departure_flight': start_date,
+                    'arrival_flight': self.inbounddate,
+                    'price_flight': price}
 
     def get_connection_price(self, source, destination, start_date, end_date):
         if destination + '\r' not in self.cities_overview:
             return -1
 
-        price = self.get_flightprice(source, destination, start_date)
-        returnprice = self.get_flightprice(destination, self.originplace, end_date)
+        return self.get_flightprice(source, destination, start_date)
 
-        if price + returnprice < 1/2 * self.flightbudget: # Half so we have enough budget for the rest of the trip
-            return price
-
-        return -1
-
-    def get_flightprice(self, source, destination, date):
+    def get_flight_price(self, source, destination, date):
         link = ("http://partners.api.skyscanner.net/apiservices/browseroutes/v1.0/{}/{}/{}/{}/{}/{}/?apikey={}").format(
-                self.country, self.currency, self.locale, source, destination, date, self.apikey
-                )
+                self.country, self.currency, self.locale, source, destination, date, self.apikey)
         flights = requests.get(link)
 
         price = -1
@@ -185,7 +182,57 @@ class RoadtripData:
                 price = -1
         return price
 
-# helpers
+    def get_hotel(self, index):
+        arriving_flight = self.tracker.flights[index]
+        arrival_date = arriving_flight["arrival_flight"]
+
+        departing_flight = self.tracker.flights[index + 1]
+        departure_date = departing_flight["departure_flight"]
+
+        city_id = get_id(arriving_flight["to"])
+        current_hotelbudget = self.hotelbudget / ((len(self.tracker.flights) - 1) - len(self.tracker.hotels))
+
+        link = "https://gateway.skyscanner.net/hotels/v1/prices/search/entity/{}?market={}&locale={}" \
+               "&checkin_date={}&checkout_date={}&currency={}&adults={}&rooms={}&price_max={}&sort={}?apikey={}".format(
+                city_id, self.country, self.locale, arrival_date, departure_date, self.currency, self.rooms, self.adults,
+                current_hotelbudget, "rating", "7772cbd8f1a640ffa9536d96d4c3c48e")
+
+        hotels = requests.get(link, headers={"x-user-agent": "D;B2B"})
+
+        while hotels.json()["meta"]["status"] != 'COMPLETED':
+            hotels = requests.get(link)
+
+        self.hotelbudget -= hotels.json()["results"]["hotels"][0]["offers"][0]["price"]
+
+        return {'hotel_link': hotels.json()["results"]["hotels"][0]["offers"][0]["deeplink"],
+                 'hotel_name': hotels.json()["results"]["hotels"][0]["name"],
+                 'price_hotel': hotels.json()["results"]["hotels"][0]["offers"][0]["price"]}
+
+
+class Tracker:
+
+    def __init__(self):
+        self.hotels = []
+        self.flights = []
+
+    def get_hotels_price(self):
+        sum = 0
+        for hotel in self.hotels:
+            sum += hotel["price_hotel"]
+        return sum
+
+    def get_flights_price(self):
+        sum = 0
+        for flight in self.flights:
+            sum += flight["price_flight"]
+        return sum
+
+    def get_last_city(self):
+        return self.flights[-1]["to_destination"]
+
+
+
+# helper functions
 def calculate_new_date(start_date, nb_days):
     delta_days = timedelta(days=nb_days)
     end_date = date_string_to_object(start_date)
@@ -203,3 +250,8 @@ def get_location(city_name):
     lat = resp['results'][0]['geometry']['location']['lat']
     lon = resp['results'][0]['geometry']['location']['lng']
     return (lat, lon)
+
+def get_id(city_name):
+    resp = requests.get(
+        'http://gateway.skyscanner.net/autosuggest/v3/hotels?q=%s&market=US&locale=en-US&apikey=7772cbd8f1a640ffa9536d96d4c3c48e' % city_name)
+    return resp.json()['results'][0]['id']
