@@ -74,6 +74,12 @@ h2 {
 	height:92%;
 }
 
+#question_form {
+	padding-top: 2%;
+	width: 70%;
+	margin: auto;
+}
+
 #question_form table {
     color: white;
     font-size: 20pt;
@@ -82,6 +88,7 @@ h2 {
 
 #question_form td {
   padding-bottom: 30px;
+  padding-right: 20px;
 }
 
 #question_form input {
