@@ -24,7 +24,7 @@
 	<a href="index.html"><img width='400px' src='skyscanner.svg'></a>
 </div>
 
-<div ng-app="app" ng-controller="myCtrl as ctrl"> 
+<div ng-app="app" ng-controller="myCtrl"> 
 
 	<div id='content'>
 		<form id="question_form">
@@ -37,14 +37,14 @@
 					<td>
 						<table>
 							<tr>
-								<td>Arrival</td><td><md-datepicker ng-model="ctrl.startdate" md-placeholder="Enter date"></md-datepicker></td>
+								<td>Arrival</td><td><md-datepicker ng-model="startdate" md-placeholder="Enter date"></md-datepicker></td>
 							</tr>
 						</table>
 					</td>
 					<td>
 						<table>
 							<tr>
-								<td>Departure</td><td><md-datepicker ng-model="ctrl.enddate" md-placeholder="Enter date"></md-datepicker></td>
+								<td>Departure</td><td><md-datepicker ng-model="enddate" md-placeholder="Enter date"></md-datepicker></td>
 							</tr>
 						</table>
 					</td>
@@ -75,7 +75,9 @@
               source: $scope.source,
               count: $scope.count,
               budget: $scope.budget,
-              rooms: $scope.rooms
+              rooms: $scope.rooms,
+              start: $scope.startdate,
+              end: $scope.enddate
           };
 		  
       
