@@ -148,9 +148,11 @@ class RoadtripData:
             self.cities.append[city[1]]
 
     def get_connection_price(self, source, destination, start_date, end_date):
-        if destination not in self.cities_overview:
+        print(destination[1])
+        if destination[1] not in self.cities_overview:
+            print("fail")
             return -1
-
+        print("success")
         price = self.get_flightprice(source, destination, start_date)
         returnprice = self.get_flightprice(destination, self.originplace, end_date)
 
