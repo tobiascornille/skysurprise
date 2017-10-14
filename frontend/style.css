@@ -291,3 +291,7 @@ h2 {
 	margin:0;
 	padding:0;
 }
+
+.popup h2 {
+	width:100%;
+}

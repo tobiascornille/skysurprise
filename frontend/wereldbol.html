@@ -4,10 +4,27 @@
     <title>Skyscanner app</title>
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="http://www.webglearth.com/v2/api.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.2/sweetalert2.all.min.js"></script>
     <script>
       var earth;
       var anim = true;
       function initialize() {
+        swal({
+            title: 'Click the globe',
+            type: 'info',
+            customClass: 'popup',
+            html:
+                'Let fate decide where you go!',
+            showCloseButton: true,
+            focusConfirm: false,
+            confirmButtonText:
+                '<i class="fa fa-thumbs-up"></i> Great!',
+            confirmButtonAriaLabel: 'Thumbs up, great!',
+            cancelButtonText:
+            '<i class="fa fa-thumbs-down"></i>',
+            cancelButtonAriaLabel: 'Thumbs down',
+        })
+
         earth = new WE.map('earth_div');
         earth.setView([46.8011, 8.2266], 1.9);
          WE.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
@@ -17,6 +34,7 @@
         var before = null;
         var up = true;
 
+        
        
         requestAnimationFrame(function animate(now) {
             if (anim == true) {

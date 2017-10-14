@@ -10,6 +10,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.2/sweetalert2.all.min.js"></script>
 
 	<!-- Angular Material Library -->
 	<script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
@@ -77,17 +78,25 @@
 	this.startdate = new Date();
 	$scope.airports = [];
 	this.enddate = new Date();
-    this.isOpen = false;
+	this.isOpen = false;
       $scope.SendData = function () {
 		//  window.location.href="wereldbol.html";
-         // use $.param jQuery function to serialize data from JSON
+		 // use $.param jQuery function to serialize data from JSON
+		 if(!$scope.outbounddate) {
+			 $scope.outbounddate = new Date();
+		 }
+		 if(!$scope.inbounddate) {
+			 $scope.inbounddate = new Date();
+		 }
+		 var inb =   $scope.inbounddate.getFullYear() + "-" + ("0"+($scope.inbounddate.getMonth()+1)).slice(-2) + "-" + $scope.inbounddate.getDate();
+		 var outb =   $scope.outbounddate.getFullYear() + "-" + ("0"+($scope.outbounddate.getMonth()+1)).slice(-2) + "-" + $scope.outbounddate.getDate();
           var data = {
               destinationplace: $scope.destinationplace.PlaceId,
               adults: $scope.adults,
               budget: $scope.budget,
               rooms: $scope.rooms,
-              outbounddate: $scope.outbounddate,
-              inbounddate: $scope.inbounddate
+              outbounddate: outb,
+              inbounddate: inb
           };
 
 
@@ -98,18 +107,42 @@
               }
           }
 
-          console.log(data);
+		  console.log(data);
+		  
+		  swal({
+				title: 'Let\'s generate a random roadtrip!',
+				customClass: 'popup',
+				timer:1000,
+				showCancelButton: true,
+				showLoaderOnConfirm: true,
+				imageUrl: 'airplane.png',
+				imageWidth: 200,
+				imageHeight: 200,
+				imageAlt: 'Custom image',
+				onOpen: function () {
+					swal.showLoading()
+					$http.post('http://127.0.0.1:8000/questions/', data, config)
+						.success(function (data, status, headers, config) {
+							$scope.PostDataResponse = data;
+							setTimeout(window.location.href="wereldbol.html",2000)
+						   
+						})
+						.error(function (data, status, header, config) {
+							$scope.ResponseDetails = "Data: " + data +
+								"<hr />status: " + status +
+								"<hr />headers: " + header +
+								"<hr />config: " + config;
+						})
+				}
+				}).then(
+				function () {},
+				// handling the promise rejection
+				function (dismiss) {
+					
+				}
+				)
 
-          $http.post('http://127.0.0.1:8000/questions/', data, config)
-          .success(function (data, status, headers, config) {
-              $scope.PostDataResponse = data;
-          })
-          .error(function (data, status, header, config) {
-              $scope.ResponseDetails = "Data: " + data +
-                  "<hr />status: " + status +
-                  "<hr />headers: " + header +
-                  "<hr />config: " + config;
-          });
+          
 	  };
 
 	  $scope.getAirports = function () {
