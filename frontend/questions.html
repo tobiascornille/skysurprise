@@ -5,7 +5,14 @@
 <head>
 <title>Skyscanner app</title>
 <link rel="stylesheet" type="text/css" href="style.css">
-<script src="angular.min.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+<!-- Angular Material Library -->
+<script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
 </head>
 
 <body>
@@ -14,15 +21,31 @@
 	<a href="index.html"><img width='400px' src='skyscanner.svg'></a>
 </div>
 
-<div ng-app="app" ng-controller="myCtrl"> 
+<div ng-app="app" ng-controller="myCtrl as ctrl"> 
 
 	<div id='content'>
 		<form id="question_form">
 			<table>
-				<tr><td>Where are you leaving from?</td><td><input ng-model="source" type="text"/></td></tr>
-				<tr><td>How many people want to go?</td><td><input ng-model="count" type="text"/></td></tr>
-				<tr><td>What is your budget per person?</td><td><input ng-model="budget" type="text"/></td></tr>
-				<tr><td>How many rooms does your accomodation require?</td><td><input ng-model="rooms" type="text"/></td></tr>
+				<tr><td>Where are you leaving from?</td><td><input ng-model="source" type="text" placeholder="e.g. Amsterdam"/></td></tr>
+				<tr><td>How many people want to go?</td><td><input ng-model="count" type="text" placeholder="e.g. 3"/></td></tr>
+				<tr><td>What is your budget per person in euro?</td><td><input ng-model="budget" type="text" placeholder="e.g. 2000"/></td></tr>
+				<tr><td>How many rooms does your accomodation require?</td><td><input ng-model="rooms" type="text" placeholder="Value" placeholder="e.g. 2"/></td></tr>
+				<tr>
+					<td>
+						<table>
+							<tr>
+								<td>Arrival</td><td><md-datepicker ng-model="ctrl.startdate" md-placeholder="Enter date"></md-datepicker></td>
+							</tr>
+						</table>
+					</td>
+					<td>
+						<table>
+							<tr>
+								<td>Departure</td><td><md-datepicker ng-model="ctrl.enddate" md-placeholder="Enter date"></md-datepicker></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
 			</table>
 			<button id="submitquestions" ng-click="SendData()">Find me a roadtrip already!</button>
 		<form>
@@ -33,9 +56,11 @@
 </div>
 
 <script>
-	var app = angular.module("app", []);
+	var app = angular.module("app", ['ngMaterial', 'ngMessages']);
   app.controller("myCtrl", function ($scope, $http) {
-
+	this.startdate = new Date();
+	this.enddate = new Date();
+    this.isOpen = false;
       $scope.SendData = function () {
          // use $.param jQuery function to serialize data from JSON 
           var data = {
