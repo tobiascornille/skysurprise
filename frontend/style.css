@@ -1,0 +1,60 @@
+@font-face {
+	font-family: airways;
+	src: url('Airways.ttf');
+}
+
+html {
+	background-image: url('bg.jpg');
+	background-size: cover;
+	margin: 0;
+}
+
+body {
+	margin: 0;
+}
+
+h1 {
+	color: white;
+	font-size: 70pt;
+	font-weight: bold;
+	font-family: airways;
+	margin:auto;
+	width: 400px;
+}
+
+h2 {
+	color: white;
+	font-size: 50pt;
+	font-weight: bold;
+	font-family: airways;
+	margin:0;
+	margin:auto;
+	width: 400px;
+}
+
+#surpriseme {
+    background-color: #38c5d8;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20pt;
+    border-radius: 40px;
+		margin-top: 230px;
+		width: 300px;
+}
+
+#header {
+	background-color: white;
+	padding: 10px;
+	width:100vw;
+	box-shadow: 0px 10px 10px white;
+	margin-bottom:30px;
+}
+
+#content {
+	text-align: center;
+	margin:20px;
+}
