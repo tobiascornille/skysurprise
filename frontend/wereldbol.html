@@ -4,11 +4,21 @@
     <title>Skyscanner app</title>
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="http://www.webglearth.com/v2/api.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.2/sweetalert2.all.min.js"></script>
     <script>
       var earth;
       var anim = true;
+      var app = angular.module("app", []);
+      app.controller("myCtrl", function ($timeout, $q, $log, $scope, $http) {
+          initialize();
       function initialize() {
+        var data = JSON.parse(sessionStorage.data)
+
         swal({
             title: 'Click the globe',
             type: 'info',
@@ -71,19 +81,43 @@
            // var markerCustom = WE.marker([e.latitude, e.longitude], 'logo-webglearth-white-100.png', 100, 24).addTo(earth);
     
             earth.panTo([e.latitude, e.longitude],  {animate: true, duration: 0.5});
+            data.longitude = e.longitude;
+            data.latitude = e.latitude;
             anim = false;
-            window.location="surprisetrip.html";   
+            console.log(data);
+
+            var config = {
+              headers : {
+                  'Content-Type': 'application/json; charset=utf-8',
+				  'Authorization' : 'Basic YWRtaW46aGFja3VwY2FkbWlu'
+              }
+          }
+
+            $http.post('http://127.0.0.1:8000/questions/', data, config)
+                    .success(function (data, status, headers, config) {
+                        $scope.PostDataResponse = data;
+                       
+                        setTimeout(function(){ window.location.href="surprisetrip.html"; },1000);
+                        
+                    })
+                    .error(function (data, status, header, config) {
+                        $scope.ResponseDetails = "Data: " + data +
+                            "<hr />status: " + status +
+                            "<hr />headers: " + header +
+                            "<hr />config: " + config;
+                    })
+        
         }
         earth.on('click', showInfo);
        
-       
       }
+      });
     </script>
     <title>Map</title>
   </head>
 
   
-  <body onload="initialize()">
+  <body ng-app="app" ng-controller="myCtrl as ctrl">
         <div id='header'>
             <a href="index.html"><img src='skyscanner.svg'></a>
         </div>

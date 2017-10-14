@@ -91,7 +91,7 @@
 		 var inb =   $scope.inbounddate.getFullYear() + "-" + ("0"+($scope.inbounddate.getMonth()+1)).slice(-2) + "-" + $scope.inbounddate.getDate();
 		 var outb =   $scope.outbounddate.getFullYear() + "-" + ("0"+($scope.outbounddate.getMonth()+1)).slice(-2) + "-" + $scope.outbounddate.getDate();
           var data = {
-              destinationplace: $scope.destinationplace.PlaceId,
+              originplace: $scope.destinationplace.PlaceName,
               adults: $scope.adults,
               budget: $scope.budget,
               rooms: $scope.rooms,
@@ -99,20 +99,12 @@
               inbounddate: inb
           };
 
-
-          var config = {
-              headers : {
-                  'Content-Type': 'application/json; charset=utf-8',
-				  'Authorization' : 'Basic YWRtaW46aGFja3VwY2FkbWlu'
-              }
-          }
-
 		  console.log(data);
 		  
 		  swal({
 				title: 'Let\'s generate a random roadtrip!',
 				customClass: 'popup',
-				timer:1000,
+				timer:5000,
 				showCancelButton: true,
 				showLoaderOnConfirm: true,
 				imageUrl: 'airplane.png',
@@ -121,26 +113,16 @@
 				imageAlt: 'Custom image',
 				onOpen: function () {
 					swal.showLoading()
-					$http.post('http://127.0.0.1:8000/questions/', data, config)
-						.success(function (data, status, headers, config) {
-							$scope.PostDataResponse = data;
-							setTimeout(window.location.href="wereldbol.html",2000)
-						   
-						})
-						.error(function (data, status, header, config) {
-							$scope.ResponseDetails = "Data: " + data +
-								"<hr />status: " + status +
-								"<hr />headers: " + header +
-								"<hr />config: " + config;
-						})
-				}
-				}).then(
+					sessionStorage.data = JSON.stringify(data);
+					setTimeout(function(){ window.location.href="wereldbol.html"; },1000);
+				
+				}}).then(
 				function () {},
 				// handling the promise rejection
 				function (dismiss) {
 					
-				}
-				)
+				
+				});
 
           
 	  };
@@ -150,19 +132,18 @@
 		  var lowercaseQuery = angular.lowercase(query);
 		  var url = "http://partners.api.skyscanner.net/apiservices/autosuggest/v1.0/UK/GBP/en-GB/?query="+ lowercaseQuery + "&apiKey=ha299393881404988495032524468396";
 
-		  console.log(query!="");
-		if(query != "") {
-		  $http.get(url)
-		  .success(function (response) {
-              $scope.airports = response.Places;
-          })
-          .error(function (response) {
-			  console.log('error');
-			  console.log(response);
-		  });
-		} else {
-			$scope.airports = [];
-		}
+			if(query != "") {
+			$http.get(url)
+			.success(function (response) {
+				$scope.airports = response.Places;
+			})
+			.error(function (response) {
+				console.log('error');
+				console.log(response);
+			});
+			} else {
+				$scope.airports = [];
+			}
 	  }
 	  
 	  $scope.selected = function(item) {
