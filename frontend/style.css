@@ -261,3 +261,31 @@ h2 {
 	bottom:10%;
 	left:40%;
   }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    width:94%;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 12px 16px;
+	z-index: 1;
+	color:black;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-item:hover {
+	background-color:darkgray;
+	cursor:pointer;
+	width:100%;
+	margin:0;
+	padding:0;
+}

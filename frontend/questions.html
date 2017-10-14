@@ -24,12 +24,21 @@
 	<a href="index.html"><img width='400px' src='skyscanner.svg'></a>
 </div>
 
-<div ng-app="app" ng-controller="myCtrl">
+<div ng-app="app" ng-controller="myCtrl as ctrl">
 
 	<div id='content'>
 		<form id="question_form">
 			<table>
-				<tr><td>Where are you leaving from?</td><td><input ng-model="originplace" type="text" placeholder="e.g. Amsterdam"/></td></tr>
+				<tr><td>Where are you leaving from?</td><td>
+						<div class="dropdown">
+								<input ng-model="destinationplace.PlaceName" type="text" placeholder="e.g. Amsterdam" ng-change="getAirports()"/>
+								<div class="dropdown-content" ng-if="airports.length > 1">
+										<div ng-click="selected(item)" class="dropdown-item" ng-repeat="item in airports"> {{item.PlaceName}} </div>
+								</div>
+							  </div>
+						
+						
+					</td></tr>
 				<tr><td>How many people want to go?</td><td><input ng-model="adults" type="text" placeholder="e.g. 3"/></td></tr>
 				<tr><td>What is your budget per person in euro?</td><td><input ng-model="budget" type="text" placeholder="e.g. 2000"/></td></tr>
 				<tr><td>How many rooms does your accomodation require?</td><td><input ng-model="rooms" type="text" placeholder="e.g. 2" placeholder="e.g. 2"/></td></tr>
@@ -53,7 +62,6 @@
 			<button id="submitquestions" ng-click="SendData()">Find me a roadtrip already!</button>
 		<form>
 
-    {{ PostDataResponse }}
 	</div>
 
 </div>
@@ -65,14 +73,16 @@
        return moment(date).format('DD/MM/YYYY');
     };
 });
-  app.controller("myCtrl", function ($scope, $http) {
+  app.controller("myCtrl", function ($timeout, $q, $log, $scope, $http) {
 	this.startdate = new Date();
+	$scope.airports = [];
 	this.enddate = new Date();
     this.isOpen = false;
       $scope.SendData = function () {
+		//  window.location.href="wereldbol.html";
          // use $.param jQuery function to serialize data from JSON
           var data = {
-              destinationplace: $scope.destinationplace,
+              destinationplace: $scope.destinationplace.PlaceId,
               adults: $scope.adults,
               budget: $scope.budget,
               rooms: $scope.rooms,
@@ -100,8 +110,28 @@
                   "<hr />headers: " + header +
                   "<hr />config: " + config;
           });
-      };
+	  };
 
+	  $scope.getAirports = function () {
+		  var query = $scope.destinationplace.PlaceName;
+		  var lowercaseQuery = angular.lowercase(query);
+		  var url = "http://partners.api.skyscanner.net/apiservices/autosuggest/v1.0/UK/GBP/en-GB/?query="+ lowercaseQuery + "&apiKey=ha299393881404988495032524468396";
+
+		  $http.get(url)
+		  .success(function (response) {
+              $scope.airports = response.Places;
+          })
+          .error(function (response) {
+			  console.log('error');
+			  console.log(response);
+          });
+	  }
+	  
+	  $scope.selected = function(item) {
+		  console.log(item);
+		  $scope.destinationplace = item;
+	  }
+	
   });
 </script>
 
