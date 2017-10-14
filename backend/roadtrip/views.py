@@ -6,11 +6,9 @@ from rest_framework.response import Response
 from backend.roadtrip.models import Roadtrip
 from backend.roadtrip.serializers import RoadtripSerializer
 import requests
-<<<<<<< HEAD
 import pickle
-=======
 from datetime import datetime, timedelta
->>>>>>> 246700beef6818462dccddcef1d0aaee5eee8cad
+
 
 
 @api_view(['GET', 'POST'])
@@ -47,11 +45,8 @@ class RoadtripData:
         self.hotelbudget = budget / 2
         self.rooms = rooms
         self.cities = []
-<<<<<<< HEAD
         self.hotels = []
-=======
         self.days_per_city = 3
->>>>>>> 246700beef6818462dccddcef1d0aaee5eee8cad
         self.apikey = 'prtl6749387986743898559646983194'
         with open("city_ids.pkl", 'rb') as f:
             self.cityids = pickle.load(f)
@@ -61,14 +56,11 @@ class RoadtripData:
         day_in_planning = self.inbounddate
         # find nearest city
         add_nearest_city(self.originplace)
-<<<<<<< HEAD
         lastlocation = self.cities[-1]
-=======
         last_city = self.cities[-1]
         if last_city == None:
             print("couldn't find a trip for you")
             return
->>>>>>> 246700beef6818462dccddcef1d0aaee5eee8cad
 
         # substract the cost to go to this city
         #   is already done in the previous function
@@ -78,14 +70,12 @@ class RoadtripData:
 
         # add as much extra cities as possible within the flightbudget,
         # keeping in mind that we also have to get home
-<<<<<<< HEAD
         while flightbudget - self.get_flightprice(lastlocation, self.originplace, self.inbounddate) > 0:
             add_city()
-=======
+
         while flightbudget - self.get_flightprice(lastLocation, self.originplace, self.inbounddate) > 0:
             add_city(last_city, day_in_planning, days_per_city)
             last_city = self.cities[-1]
->>>>>>> 246700beef6818462dccddcef1d0aaee5eee8cad
 
         # terugvlucht moeten aftrekken
 
