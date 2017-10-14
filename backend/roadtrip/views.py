@@ -191,3 +191,10 @@ def calculate_new_date(start_date, nb_days):
 def date_string_to_object(str_date):
     str_date = str_date.split('-')
     date = datetime(year=int(str_date[0]), month=int(str_date[1]), day=int(str_date[2]))
+
+def get_location(city_name):
+    api_url = 'http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=true'
+    resp = requests.get(api_url%city_name).json()
+    lat = resp['results'][0]['geometry']['location']['lat']
+    lon = resp['results'][0]['geometry']['location']['lng']
+    return (lat, lon)
