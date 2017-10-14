@@ -57,12 +57,14 @@ h2 {
 	width:100vw;
 	padding-top:2%;
 	padding-left:2%;
+	padding-bottom:2%;
 	height:8%;
 }
 
-#header > img {
-	height:80%;
+#header img {
 	margin-top:0%;
+	width:30%;
+	margin-left: 2%;
 }
 
 #content {
