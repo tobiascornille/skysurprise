@@ -7,10 +7,10 @@ def get_nearest_city(location):
     latitude = location[0]
     longitude = location[1]
 
-    cities = requests.get('http://getnearbycities.geobytes.com/GetNearbyCities?callback=?&latitude=%s&longitude=%s&radius=%i&limit=%i' % (latitude, longitude, radius, limit))
+    cities = requests.get('http://getnearbycities.geobytes.com/GetNearbyCities?callback=?&latitude={}&longitude={}&radius={}&limit={}'.format(latitude, longitude, radius, limit))
     text = cities.text[2:-2]
     list = eval(text)
-    print(list[0])
+    print(list[4])
     #return cities[0][1]
     # if is_valid_city(city):
     #     return city

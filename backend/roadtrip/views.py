@@ -6,8 +6,10 @@ from rest_framework.response import Response
 from backend.roadtrip.models import Roadtrip
 from backend.roadtrip.serializers import RoadtripSerializer
 import requests
+import pickle
 from datetime import datetime, timedelta
 import pickle
+
 
 
 @api_view(['GET', 'POST'])
@@ -54,11 +56,15 @@ class RoadtripData:
         self.inbounddate = inbounddate
         self.adults = adults
         self.budget = budget
-        self.flightbudget = self.budget / 2
+        self.flightbudget = budget / 2
+        self.hotelbudget = budget / 2
         self.rooms = rooms
         self.cities = []
+        self.hotels = []
         self.days_per_city = 3
         self.apikey = 'prtl6749387986743898559646983194'
+        with open("city_ids.pkl", 'rb') as f:
+            self.cityids = pickle.load(f)
 
 
     def plan_trip(self):
@@ -92,6 +98,21 @@ class RoadtripData:
 
         # after finding all our locations, we'll have to find a place to stay for the night
 
+    def add_hotel(self, city, checkindate, checkoutdate, currenthotelnumber):
+        cityid = self.cityids[city]
+        thishotelbudget = self.hotelbudget() / (len(self.cities) - currenthotelnumber)
+
+        link = "https://gateway.skyscanner.net/hotels/v1/prices/search/entity/{}?market={}&locale={}" \
+               "&checkin_date={}&checkout_date={}&currency={}&adults={}&rooms={}&price_max={}&sort={}?apikey={}".format(
+                cityid, self.country, self.locale, checkindate, checkoutdate, self.currency, self.rooms, self.adults,
+                thishotelbudget, "rating", "7772cbd8f1a640ffa9536d96d4c3c48e")
+
+        hotels = requests.get(link, headers={"x-user-agent": "D;B2B"})
+
+        while hotels.json()["meta"]["status"] != 'COMPLETED':
+            hotels = requests.get(link)
+
+        self.hotels.append(hotels["results"])
 
         print(cities)
 
@@ -103,7 +124,7 @@ class RoadtripData:
         longitude = location[1]
 
         cities = requests.get(
-            'http://getnearbycities.geobytes.com/GetNearbyCities?callback=?&latitude=%s&longitude=%s&radius=%i&limit=%i' % (
+            'http://getnearbycities.geobytes.com/GetNearbyCities?callback=?&latitude={}&longitude={}&radius={}&limit={}'.format(
             latitude, longitude, radius, limit))
         citiestext = cities.text[2:-2]
         citieslist = eval(citiestext)
