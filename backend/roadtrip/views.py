@@ -11,8 +11,10 @@ from backend.roadtrip.serializers import RoadtripSerializer
 def roadtrip_list(request, format=None):
     if request.method == 'GET':
         roadtrips = Roadtrip.objects.all()
-        serializer = RoadtripSerializer(roadtrips, many=True)
-        return Response(serializer.data)
+        lastRoadtrip = RoadtripSerializer(Roadtrip.objects.last(), many=False)
+        # serializer = RoadtripSerializer(roadtrips, many=True)
+        print(lastRoadtrip.data['source'])
+        return Response(lastRoadtrip.data)
 
     elif request.method == 'POST':
         serializer = RoadtripSerializer(data=request.data)
@@ -21,3 +23,12 @@ def roadtrip_list(request, format=None):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# helper function
+def get_flights(roadtripData):
+    country = roadtripData['country']
+    currency = roadtripData['currency']
+    locale = roadtripData['locale']
+    originplace = roadtripData['originplace']
+    # ....

@@ -5,4 +5,6 @@ from backend.roadtrip.models import Roadtrip
 class RoadtripSerializer(serializers.ModelSerializer):
     class Meta:
         model = Roadtrip
-        fields = ('source', 'count', 'budget', 'rooms')
+        fields = ('country', 'currency', 'locale', 'originplace',
+                    'destinationplace', 'outbounddate', 'inbounddate',
+                    'adults', 'budget', 'rooms')
