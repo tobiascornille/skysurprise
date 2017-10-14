@@ -52,7 +52,7 @@
 
 	<section id="cd-timeline" class="cd-container">
 		<div ng-repeat="item in path"> 
-				<div class="cd-timeline-block">
+				<div class="cd-timeline-block" ng-if="item.price_flight != ''">
 						<div class="cd-timeline-img  cd-picture">
 							<img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/148866/cd-icon-location.svg" alt="Location">
 						</div> <!-- cd-timeline-img -->
@@ -64,7 +64,7 @@
 						</div> <!-- cd-timeline-content -->
 					</div> <!-- cd-timeline-block -->
 
-					<div class="cd-timeline-block">
+					<div class="cd-timeline-block" ng-if="item.price_hotel != ''">
 							<div class="cd-timeline-img cd-movie">
 								<img src="http://www.iconsdb.com/icons/preview/white/hotel-xxl.png"  alt="Hotel">
 							</div> <!-- cd-timeline-img -->
