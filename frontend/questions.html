@@ -1,8 +1,11 @@
+
+
 <html>
 
 <head>
 <title>Skyscanner app</title>
 <link rel="stylesheet" type="text/css" href="style.css">
+<script src="angular.min.js"></script>
 </head>
 
 <body>
@@ -11,19 +14,59 @@
 	<a href="index.html"><img width='400px' src='skyscanner.svg'></a>
 </div>
 
+<div ng-app="app" ng-controller="myCtrl"> 
 
+	<div id='content'>
+		<form id="question_form">
+			<table>
+				<tr><td>Where are you leaving from?</td><td><input ng-model="source" type="text"/></td></tr>
+				<tr><td>How many people want to go?</td><td><input ng-model="count" type="text"/></td></tr>
+				<tr><td>What is your budget per person?</td><td><input ng-model="budget" type="text"/></td></tr>
+				<tr><td>How many rooms does your accomodation require?</td><td><input ng-model="rooms" type="text"/></td></tr>
+			</table>
+			<button id="submitquestions" ng-click="SendData()">Find me a roadtrip already!</button>
+		<form>
 
-<div id='content'>
-	<form id="question_form" action="" method="post">
-		<table>
-			<tr><td>Where are you leaving from?</td><td><input type="text"/></td></tr>
-			<tr><td>How many people want to go?</td><td><input type="text"/></td></tr>
-			<tr><td>What is your budget per person?</td><td><input type="text"/></td></tr>
-			<tr><td>How many rooms does your accomodation require?</td><td><input type="text"/></td></tr>
-		</table>
-		<input id="submitquestions" type="submit" value="Find me a roadtrip already!"></input>
-	<form>
+    {{ PostDataResponse }}
+	</div>
+
 </div>
+
+<script>
+	var app = angular.module("app", []);
+  app.controller("myCtrl", function ($scope, $http) {
+
+      $scope.SendData = function () {
+         // use $.param jQuery function to serialize data from JSON 
+          var data = {
+              source: $scope.source,
+              count: $scope.count,
+              budget: $scope.budget,
+              rooms: $scope.rooms
+          };
+      
+          var config = {
+              headers : {
+                  'Content-Type': 'application/json; charset=utf-8'
+              }
+          }
+
+          console.log(data);
+
+          $http.post('/ServerRequest/PostDataResponse', data, config)
+          .success(function (data, status, headers, config) {
+              $scope.PostDataResponse = data;
+          })
+          .error(function (data, status, header, config) {
+              $scope.ResponseDetails = "Data: " + data +
+                  "<hr />status: " + status +
+                  "<hr />headers: " + header +
+                  "<hr />config: " + config;
+          });
+      };
+
+  });
+</script>
 
 
 </body>
