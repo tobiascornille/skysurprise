@@ -61,7 +61,8 @@ h2 {
 }
 
 #header > img {
-	
+	height:80%;
+	margin-top:0%;
 }
 
 #content {
