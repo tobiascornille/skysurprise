@@ -9,8 +9,7 @@
       var anim = true;
       function initialize() {
         earth = new WE.map('earth_div');
-        earth.setView([46.8011, 8.2266], 3);
-        earth.setZoom(2);
+        earth.setView([46.8011, 8.2266], 1.9);
          WE.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
         }).addTo(earth);
 
@@ -55,26 +54,49 @@
     
             earth.panTo([e.latitude, e.longitude],  {animate: true, duration: 0.5});
             anim = false;
-            earth.off('click');
         }
         earth.on('click', showInfo);
-        console.log('print');
 
        
       }
     </script>
-    <style type="text/css">
-      html, body{padding: 0; margin: 0;}
-      #earth_div{
-          top: 0; right: 0; bottom: 0; left: 0;
-                 position: absolute !important;
-      }
-    </style> 
     <title>Map</title>
   </head>
 
   
-  <body>
-    <div id="earth_div"></div>
+  <body onload="initialize()">
+        <div id='header'>
+            <a href="index.html"><img src='skyscanner.svg'></a>
+        </div>
+        
+        
+        
+        <div id='content2'>
+            <div id="container-airplane">
+                <div id="airplane">
+                    <img src="airplane.jpg"/>
+                </div>
+                <div id="clicktofly">
+                        <h2>Click to</h2>
+                        <h1> _Fly</h1>
+                </div>
+                <div id="description">
+                        <!-- Animate Dashed line - based off https://css-tricks.com/svg-line-animation-works 
+-->
+
+                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                    width="612px" height="792px" viewBox="0 0 612 792"  xml:space="preserve">
+                    <path class="path" fill="none" stroke="#000000" stroke-linejoin="round" stroke-miterlimit="10" d="M62.9 14.9c-25-7.74-56.6 4.8-60.4 24.3-3.73 19.6 21.6 35 39.6 37.6 42.8 6.2 72.9-53.4 116-58.9 65-18.2 191 101 215 14.9c-25-7.74-56.6 14.9c-25-7.74-56.6 4.8-60.4 "/>
+
+                    <path class="dashed" fill="none" stroke="lightgray" stroke-width="4" stroke-linejoin="round" stroke-miterlimit="10" d="M62.9 14.9c-25-7.74-56.6 4.8-60.4 24.3-3.73 19.6 21.6 35 39.6 37.6 42.8 6.2 72.9-53.4 116-58.9 65-18.2 191 101 215 14.9c-25-7.74-56.6 14.9c-25-7.74-56.6 4.8-60.4 "/>
+                    </svg>
+                    </div>
+
+            </div>
+            <div id="earth_div">
+            </div>
+
+            
+        </div>
   </body>
 </html>
