@@ -8,7 +8,7 @@ from backend.roadtrip.serializers import RoadtripSerializer
 import requests
 import pickle
 from datetime import datetime, timedelta
-import pickle
+import os,sys
 
 
 
@@ -63,8 +63,9 @@ class RoadtripData:
         self.hotels = []
         self.days_per_city = 3
         self.apikey = 'prtl6749387986743898559646983194'
-        with open("city_ids.pkl", 'rb') as f:
-            self.cityids = pickle.load(f)
+
+        with open("backend\city_names.pkl", 'rb') as f:
+            self.cities_overview = pickle.load(f)
 
 
     def plan_trip(self):
@@ -72,10 +73,10 @@ class RoadtripData:
         obj_inbounddate = date_string_to_object(self.inbounddate)
         # find nearest city
         self.add_nearest_city(self.originplace)
-        last_city = self.cities[-1]
-        if last_city == None:
+        if len(self.cities) == 0:
             print("couldn't find a trip for you")
             return
+        last_city = self.cities[-1]
 
         # substract the cost to go to this city
         #   is already done in the previous function
@@ -122,16 +123,15 @@ class RoadtripData:
         radius = 10000
         latitude = location[0]
         longitude = location[1]
-
         cities = requests.get(
             'http://getnearbycities.geobytes.com/GetNearbyCities?callback=?&latitude={}&longitude={}&radius={}&limit={}'.format(
             latitude, longitude, radius, limit))
         citiestext = cities.text[2:-2]
         citieslist = eval(citiestext)
-
         for city in citieslist:
             price = self.get_connection_price(location, city, self.outbounddate, self.inbounddate)
             if price != -1:
+                print("HHHHHHHHHHEEEEEEEEEEEEEEEEEEEEYYYYYYYYYYYYY")
                 self.flightbudget -= price
                 self.cities.append[city[1]]
                 return
@@ -148,9 +148,7 @@ class RoadtripData:
             self.cities.append[city[1]]
 
     def get_connection_price(self, source, destination, start_date, end_date):
-        with open('../city_names.pkl', 'rb') as f:
-            l = pickle.load(f)
-        if destination not in cities_overview:
+        if destination not in self.cities_overview:
             return -1
 
         price = self.get_flightprice(source, destination, start_date)
