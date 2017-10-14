@@ -40,6 +40,7 @@ class RoadtripData:
         self.flightbudget = budget / ..
         self.rooms = rooms
         self.cities = []
+        self.apikey = 'prtl6749387986743898559646983194'
 
     def add_nearest_city(self, location):
         limit = 100
@@ -74,6 +75,17 @@ class RoadtripData:
             return price
 
         return -1
+
+    def get_flightprice(self, source, destination, date):
+        link = ("http://partners.api.skyscanner.net/apiservices/browseroutes/v1.0/{}/{}/{}/{}/{}/{}/?apikey={}").format(
+                self.country, self.currency, self.locale, source, destination, date, self.apikey
+                )
+        print(link)
+        flights = requests.get(link)
+        price = flights.json()['Routes'][0]['Price']
+        return price
+
+
 
 
 # helper function
