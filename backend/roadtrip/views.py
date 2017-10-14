@@ -46,12 +46,13 @@ def roadtrip_list(request, format=None):
 
 class RoadtripData:
 
-    def __init__(self, country, currency, locale, originplace, destinationplace, outbounddate, inbounddate, adults, budget, rooms, randomlocation):
+    def __init__(self, country, currency, locale, originplace, longitude, latitude, outbounddate, inbounddate, adults, budget, rooms):
         self.country = country
         self.currency = currency
         self.locale = locale
         self.originplace = originplace
-        self.destinationplace = destinationplace
+        self.longitude = longitude
+        self.latitude = latitude
         self.outbounddate = outbounddate
         self.inbounddate = inbounddate
         self.adults = adults
@@ -72,7 +73,7 @@ class RoadtripData:
         day_in_planning = self.inbounddate
         obj_inbounddate = date_string_to_object(self.inbounddate)
         # find nearest city
-        self.add_nearest_city(self.originplace)
+        self.add_starting_city()
         if len(self.cities) == 0:
             print("couldn't find a trip for you")
             return
@@ -115,21 +116,23 @@ class RoadtripData:
 
         self.hotels.append(hotels["results"])
 
-        print(cities)
+        print(self.cities)
 
 
-    def add_nearest_city(self, location):
+    def add_starting_city(self):
         limit = 100
         radius = 10000
-        latitude = location[0]
-        longitude = location[1]
-        cities = requests.get(
-            'http://getnearbycities.geobytes.com/GetNearbyCities?callback=?&latitude={}&longitude={}&radius={}&limit={}'.format(
-            latitude, longitude, radius, limit))
+        latitude = self.latitude
+        longitude = self.longitude
+        cities = requests.get('http://getnearbycities.geobytes.com/GetNearbyCities?callback=?&latitude={}&longitude={}&'
+                              'radius={}&limit={}'.format(latitude, longitude, radius, limit))
         citiestext = cities.text[2:-2]
         citieslist = eval(citiestext)
+
+
+
         for city in citieslist:
-            price = self.get_connection_price(location, city, self.outbounddate, self.inbounddate)
+            price = self.get_connection_price(self.originplace, city, self.outbounddate, aanpassen)
             if price != -1:
                 print("HHHHHHHHHHEEEEEEEEEEEEEEEEEEEEYYYYYYYYYYYYY")
                 self.flightbudget -= price
