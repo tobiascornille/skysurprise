@@ -6,5 +6,5 @@ class RoadtripSerializer(serializers.ModelSerializer):
     class Meta:
         model = Roadtrip
         fields = ('country', 'currency', 'locale', 'originplace',
-                    'destinationplace', 'outbounddate', 'inbounddate',
+                    'longitude', 'latitude', 'outbounddate', 'inbounddate',
                     'adults', 'budget', 'rooms')
