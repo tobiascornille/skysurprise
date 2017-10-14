@@ -24,27 +24,27 @@
 	<a href="index.html"><img width='400px' src='skyscanner.svg'></a>
 </div>
 
-<div ng-app="app" ng-controller="myCtrl"> 
+<div ng-app="app" ng-controller="myCtrl">
 
 	<div id='content'>
 		<form id="question_form">
 			<table>
-				<tr><td>Where are you leaving from?</td><td><input ng-model="source" type="text" placeholder="e.g. Amsterdam"/></td></tr>
-				<tr><td>How many people want to go?</td><td><input ng-model="count" type="text" placeholder="e.g. 3"/></td></tr>
+				<tr><td>Where are you leaving from?</td><td><input ng-model="originplace" type="text" placeholder="e.g. Amsterdam"/></td></tr>
+				<tr><td>How many people want to go?</td><td><input ng-model="adults" type="text" placeholder="e.g. 3"/></td></tr>
 				<tr><td>What is your budget per person in euro?</td><td><input ng-model="budget" type="text" placeholder="e.g. 2000"/></td></tr>
 				<tr><td>How many rooms does your accomodation require?</td><td><input ng-model="rooms" type="text" placeholder="e.g. 2" placeholder="e.g. 2"/></td></tr>
 				<tr>
 					<td>
 						<table>
 							<tr>
-								<td>Arrival</td><td><md-datepicker ng-model="startdate" md-placeholder="Enter date"></md-datepicker></td>
+								<td>Arrival</td><td><md-datepicker ng-model="outbounddate" md-placeholder="Enter date"></md-datepicker></td>
 							</tr>
 						</table>
 					</td>
 					<td>
 						<table>
 							<tr>
-								<td>Departure</td><td><md-datepicker ng-model="enddate" md-placeholder="Enter date"></md-datepicker></td>
+								<td>Departure</td><td><md-datepicker ng-model="inbounddate" md-placeholder="Enter date"></md-datepicker></td>
 							</tr>
 						</table>
 					</td>
@@ -70,17 +70,17 @@
 	this.enddate = new Date();
     this.isOpen = false;
       $scope.SendData = function () {
-         // use $.param jQuery function to serialize data from JSON 
+         // use $.param jQuery function to serialize data from JSON
           var data = {
-              source: $scope.source,
-              count: $scope.count,
+              destinationplace: $scope.destinationplace,
+              adults: $scope.adults,
               budget: $scope.budget,
               rooms: $scope.rooms,
-              start: $scope.startdate,
-              end: $scope.enddate
+              outbounddate: $scope.outbounddate,
+              inbounddate: $scope.inbounddate
           };
-		  
-      
+
+
           var config = {
               headers : {
                   'Content-Type': 'application/json; charset=utf-8',
