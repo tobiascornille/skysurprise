@@ -37,10 +37,30 @@ class RoadtripData:
         self.outbounddate = outbounddate
         self.inbounddate = inbounddate
         self.adults = adults
-        self.flightbudget = budget / ..
+        self.budget = budget
+        self.flightbudget = budget / 2
         self.rooms = rooms
         self.cities = []
         self.apikey = 'prtl6749387986743898559646983194'
+
+
+    def plan_trip():
+        # find nearest city
+        add_nearest_city(self.originplace)
+        lastLocation = self.cities[-1]
+
+        # substract the cost to go to this city
+        #   is already done in the previous function
+
+        # add as much extra cities as possible within the flightbudget,
+        # keeping in mind that we also have to get home
+        while flightbudget - self.get_flightprice(lastLocation, self.originplace, self.inbounddate) > 0:
+            add_city()
+
+        # terugvlucht moeten aftrekken
+
+        # after finding all our locations, we'll have to find a place to stay for the night
+
 
     def add_nearest_city(self, location):
         limit = 100
@@ -57,12 +77,13 @@ class RoadtripData:
         for city in citieslist:
             price = self.get_connection_price(self, self.originplace, city, self.outbounddate)
             if price != -1:
-                self.budget -= price
+                self.flightbudget -= price
                 self.cities.append[city[1]]
                 return
 
     def add_city(self, currentcity, date):
         #TODO
+        # !!hoeveel dagen per stad?
 
     def get_connection_price(self, source, destination, date):
         if destination not in citiesoverview:
@@ -84,25 +105,3 @@ class RoadtripData:
         flights = requests.get(link)
         price = flights.json()['Routes'][0]['Price']
         return price
-
-
-
-
-# helper function
-def get_flights(roadtripData):
-    country = roadtripData['country']
-    currency = roadtripData['currency']
-    locale = roadtripData['locale']
-    originplace = roadtripData['originplace']
-    # ....
-
-
-
-
-
-
-def main():
-    print(get_nearest_city([41,2]))
-
-if __name__ == "__main__":
-    main()
