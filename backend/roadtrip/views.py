@@ -234,8 +234,27 @@ class Tracker:
     def get_last_city(self):
         return self.flights[-1]["to_destination"]
 
-    def serialize(self):
-        return []
+    def to_json(self):
+        output = []
+        for idx in range(len(self.flights)):
+            current = {}
+            current['from_destination_lat'], current['from_destination_long'] =
+                get_location(self.flights[idx]['from_destination']
+            current['to_destination_lat'], current['to_destination_long'] =
+                get_location(self.flights[idx]['to_destination']
+            current['departure_flight'] = self.flights[idx]['departure_flight']
+            current['arrival_flight'] = self.flights[idx]['arrival_flight']
+            current['price_flight'] = self.flights[idx]['price_flight']
+            if idx == len(self.flights)-1:
+                current['hotel_price'] = ''
+            else:
+                current['hotel_link'] = self.hotels[idx]['hotel_link']
+                current['hotel_name'] = self.hotels[idx]['hotel_name']
+                current['price_hotel'] = self.hotels[idx]['price_hotel']
+            output.append(current)
+        return output
+
+
 
 
 
