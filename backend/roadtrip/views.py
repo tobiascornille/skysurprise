@@ -52,7 +52,7 @@ class RoadtripData:
         self.rooms = rooms
         self.days_per_city = 3
         self.apikey = 'prtl6749387986743898559646983194'
-        self.tracker = Tracker
+        self.tracker = Tracker()
 
         with open("backend\city_names.pkl", 'rb') as f:
             self.cities_overview = pickle.load(f)
@@ -165,8 +165,9 @@ class RoadtripData:
 
     def get_flight_price(self, source, destination, date):
         print(get_autosuggest_id(source), get_autosuggest_id(destination))
-        link = ("http://partners.api.skyscanner.net/apiservices/browserquotes/v1.0/{}/{}/{}/{}/{}/{}/?apikey={}").format(
+        link = ("http://partners.api.skyscanner.net/apiservices/browsequotes/v1.0/{}/{}/{}/{}/{}/{}/?apikey={}").format(
                 self.country, self.currency, self.locale, get_autosuggest_id(source), get_autosuggest_id(destination), date, self.apikey)
+        print(link)
         flights = requests.get(link)
         price = -1
         max_iterations = 1000
