@@ -10,7 +10,7 @@ import pickle
 from datetime import datetime, timedelta
 import os,sys
 import json
-
+import random
 
 
 @api_view(['POST'])
@@ -119,7 +119,7 @@ class RoadtripData:
             # if cities
             citiestext = citiesrequest.text[2:-2]
             citieslist = eval(citiestext)
-
+            random.shuffle(citieslist)
             end_date = calculate_new_date(self.outbounddate, self.days_per_city)
             print(citieslist)
             for city in citieslist:
@@ -214,20 +214,22 @@ class RoadtripData:
             print(link)
 
             hotels = requests.get(link, headers={"x-user-agent": "D;B2B"})
+            
 
-            while hotels.json()["meta"]["status"] != 'COMPLETED':
-                hotels = requests.get(link, headers={"x-user-agent": "D;B2B"})
+            if hotels:
+                while hotels.json()["meta"]["status"] != 'COMPLETED':
+                    hotels = requests.get(link, headers={"x-user-agent": "D;B2B"})
 
 
-            self.hotelbudget -= hotels.json()["results"]["hotels"][0]["offers"][0]["price"]
+                self.hotelbudget -= hotels.json()["results"]["hotels"][0]["offers"][0]["price"]
 
-            return {'hotel_link': hotels.json()["results"]["hotels"][0]["offers"][0]["deeplink"],
-                    'hotel_name': hotels.json()["results"]["hotels"][0]["name"],
-                    'price_hotel': hotels.json()["results"]["hotels"][0]["offers"][0]["price"]}
-        else:
-            return {'hotel_link': '',
-                    'hotel_name': '',
-                    'price_hotel': ''}
+                return {'hotel_link': hotels.json()["results"]["hotels"][0]["offers"][0]["deeplink"],
+                        'hotel_name': hotels.json()["results"]["hotels"][0]["name"],
+                        'price_hotel': hotels.json()["results"]["hotels"][0]["offers"][0]["price"]}
+      
+        return {'hotel_link': '',
+                'hotel_name': '',
+                'price_hotel': ''}
 
 
 class Tracker:
