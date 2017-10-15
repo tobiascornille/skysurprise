@@ -77,15 +77,18 @@ class RoadtripData:
 
         # add as much extra flights as possible within the flightbudget,
         # keeping in mind that we also have to get home in time
-        while (self.flightbudget - self.get_flight_price(last_city, self.originplace, self.inbounddate)) > 0 \
-                and obj_next_day < obj_inbounddate:
-            print("next flight")
-            flight = self.get_flight(last_city, current_day, self.days_per_city)
-            self.tracker.flights.append(flight)
-            last_city = self.tracker.get_last_city()
+        while self.flightbudget > 300:
+            print(self.flightbudget)
+            flight = self.get_flight(last_city, current_day)
+            if(flight != None):
+                self.tracker.flights.append(flight)
+                last_city = flight["to_destination"]
+                print(flight["to_destination"])
 
-            current_day = calculate_new_date(current_day, self.days_per_city)
-            obj_next_day = date_string_to_object(current_day)
+                current_day = calculate_new_date(current_day, self.days_per_city)
+                obj_next_day = date_string_to_object(current_day)
+            else:
+                break
 
         # return flight
         self.tracker.flights.append(self.get_last_flight(last_city,current_day))
@@ -95,8 +98,7 @@ class RoadtripData:
         self.flightbudget = 0
 
         # after finding all our locations, we'll have to find a place to stay for every city
-        print("length:", len(self.tracker.flights) - 1)
-        for index in range(len(self.tracker.flights) - 1):
+        for index in range(len(self.tracker.flights) - 2):
             hotel = self.get_hotel(index)
             self.tracker.hotels.append(hotel)
 
@@ -108,47 +110,55 @@ class RoadtripData:
         radius = 10000
         latitude = self.latitude
         longitude = self.longitude
-        print("lat: {} and lon: {}".format(latitude, longitude))
-        print('http://getnearbycities.geobytes.com/GetNearbyCities?callback=?&latitude={}&longitude={}&'
-                              'radius={}&limit={}'.format(latitude, longitude, radius, limit))
         citiesrequest = requests.get('http://getnearbycities.geobytes.com/GetNearbyCities?callback=?&latitude={}&longitude={}&'
                               'radius={}&limit={}'.format(latitude, longitude, radius, limit))
         citiestext = citiesrequest.text[2:-2]
         citieslist = eval(citiestext)
 
-        end_date = calculate_new_date(self.outbounddate, self.days_per_city)
-        print(citieslist)
         for city in citieslist:
             city_name = city[1]
-            price = self.get_connection_price(self.originplace, city_name, self.outbounddate, end_date)
+            price, destination = self.get_connection_price(self.originplace, city_name, self.outbounddate)
             if price != -1 and price <= self.flightbudget:
                 self.flightbudget -= price
                 print("found succesful a starting point")
                 return {'from_destination': self.originplace,
                         'to_destination': city_name,
                         'departure_flight': self.outbounddate,
-                        'arrival_flight': end_date,
+                        'arrival_flight': self.outbounddate,
                         'price_flight': price}
 
         print("failed to find a first city")
 
-    def get_flight(self, current_city, start_date, nb_days):
-        end_date = calculate_new_date(start_date, nb_days)
-        price, destination = self.get_connection_price(current_city, "everywhere", start_date, end_date)
+    def get_flight(self, current_city, start_date):
+        coordinates_json = requests.get('https://maps.googleapis.com/maps/api/geocode/json?address=current_city&key=AIzaSyDSKdFZz_MKA9lwh8kNvDPk9qLz0ocIkQ0')
+        latitude = coordinates_json.json()['results'][0]['geometry']['location']['lat']
+        longitude = coordinates_json.json()['results'][0]['geometry']['location']['lng']
 
-        if price == -1:
-            print("failed to find a new city")
-            return None
-        else:
-            self.flightbudget -= price
-            return {'from_destination': current_city,
-                    'to_destination': destination,
-                    'departure_flight': start_date,
-                    'arrival_flight': end_date,
-                    'price_flight': price}
+        limit = 1000
+        radius = 10000
+        latitude = self.latitude
+        longitude = self.longitude
+        citiesrequest = requests.get(
+            'http://getnearbycities.geobytes.com/GetNearbyCities?callback=?&latitude={}&longitude={}&'
+            'radius={}&limit={}'.format(latitude, longitude, radius, limit))
+        citiestext = citiesrequest.text[2:-2]
+        citieslist = eval(citiestext)
+
+        for city in citieslist:
+            city_name = city[1]
+            price, destination = self.get_connection_price(current_city, city_name, start_date)
+            if price != -1 and price <= 1/2 * self.flightbudget:
+                self.flightbudget -= price
+                print("found another succesful point")
+                return {'from_destination': current_city,
+                        'to_destination': city_name,
+                        'departure_flight': start_date,
+                        'arrival_flight': start_date,
+                        'price_flight': price}
+        return None
 
     def get_last_flight(self, current_city, start_date):
-        price = self.get_connection_price(current_city, self.originplace, start_date, self.inbounddate)
+        price, destination = self.get_connection_price(current_city, self.originplace, start_date)
 
         if price > self.flightbudget:
             print("How did we let this happen? :(")
@@ -161,28 +171,32 @@ class RoadtripData:
                     'arrival_flight': self.inbounddate,
                     'price_flight': price}
 
-    def get_connection_price(self, source, destination, start_date, end_date):
-        if destination not in self.cities_overview:
-            return -1
-        return self.get_flight_price(source, destination, start_date)
+    def get_connection_price(self, source, destination, start_date):
+        if destination + '\r' not in self.cities_overview:
+            return -1, ""
+        price, destination = self.get_flight_price(source, destination, start_date)
+        return price, destination
 
     def get_flight_price(self, source, destination, date):
-        print(get_autosuggest_id(source), get_autosuggest_id(destination))
+        if (destination != "everywhere"):
+            destination = get_autosuggest_id(destination)
+
         link = ("http://partners.api.skyscanner.net/apiservices/browsequotes/v1.0/{}/{}/{}/{}/{}/{}/?apikey={}").format(
-                self.country, self.currency, self.locale, get_autosuggest_id(source), get_autosuggest_id(destination), date, self.apikey)
+                self.country, self.currency, self.locale, get_autosuggest_id(source), destination, date, self.apikey)
         print(link)
         flights = requests.get(link)
         price = -1
         max_iterations = 1000
         iteration = 0
+        final_destination = ""
         while (price == -1 and iteration < max_iterations):
             try:
                 price = flights.json()['Quotes'][iteration]['MinPrice']
-                print(price)
+                final_destination = flights.json()['Places'][iteration]['Name']
             except:
                 price = -1
             iteration += 1
-        return price
+        return price, final_destination
 
     def get_hotel(self, index):
         arriving_flight = self.tracker.flights[index]
@@ -207,16 +221,16 @@ class RoadtripData:
             while hotels.json()["meta"]["status"] != 'COMPLETED':
                 hotels = requests.get(link, headers={"x-user-agent": "D;B2B"})
 
+            if(hotels.json()["results"]["hotels"][0] != None):
+                print(hotels.json())
 
-            self.hotelbudget -= hotels.json()["results"]["hotels"][0]["offers"][0]["price"]
+                self.hotelbudget -= hotels.json()["results"]["hotels"][0]["offers"][0]["price"]
 
-            return {'hotel_link': hotels.json()["results"]["hotels"][0]["offers"][0]["deeplink"],
-                    'hotel_name': hotels.json()["results"]["hotels"][0]["name"],
-                    'price_hotel': hotels.json()["results"]["hotels"][0]["offers"][0]["price"]}
-        else:
-            return {'hotel_link': '',
-                    'hotel_name': '',
-                    'price_hotel': ''}
+                return {'hotel_link': hotels.json()["results"]["hotels"][0]["offers"][0]["deeplink"],
+                        'hotel_name': hotels.json()["results"]["hotels"][0]["name"],
+                        'price_hotel': hotels.json()["results"]["hotels"][0]["offers"][0]["price"]}
+
+        return {'hotel_link': '','hotel_name': '','price_hotel': ''}
 
 
 class Tracker:
@@ -238,11 +252,14 @@ class Tracker:
         return sum
 
     def get_last_city(self):
-        return self.flights[-1]["to_destination"]
+        try:
+            return self.flights[-1]["to_destination"]
+        except:
+            return None
 
     def to_json(self):
         output = []
-        for idx in range(len(self.flights)):
+        for idx in range(len(self.flights) - 1):
             current = {}
             current['from_destination_lat'], current['from_destination_long'] = get_location(self.flights[idx]['from_destination'])
             current['from_destination'] = self.flights[idx]['from_destination']
@@ -251,9 +268,11 @@ class Tracker:
             current['departure_flight'] = self.flights[idx]['departure_flight']
             current['arrival_flight'] = self.flights[idx]['arrival_flight']
             current['price_flight'] = self.flights[idx]['price_flight']
-            if idx == len(self.flights)-1:
+            if idx == len(self.flights)-2:
                 current['price_hotel'] = ''
             else:
+                print(self.hotels)
+                print(idx)
                 current['hotel_link'] = self.hotels[idx]['hotel_link']
                 current['hotel_name'] = self.hotels[idx]['hotel_name']
                 current['price_hotel'] = self.hotels[idx]['price_hotel']
