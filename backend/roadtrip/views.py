@@ -253,3 +253,8 @@ def get_id(city_name):
     resp = requests.get(
         'http://gateway.skyscanner.net/autosuggest/v3/hotels?q=%s&market=US&locale=en-US&apikey=7772cbd8f1a640ffa9536d96d4c3c48e' % city_name)
     return resp.json()['results'][0]['id']
+
+def get_autosuggest_id(city_name):
+    api_url = 'http://partners.api.skyscanner.net/apiservices/autosuggest/v1.0/BE/EUR/nl-NL?query=%s&apiKey=7772cbd8f1a640ffa9536d96d4c3c48e'
+    resp = requests.get(api_url%city_name).json()
+    return resp['Places'][0]['CityId']
