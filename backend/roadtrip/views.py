@@ -30,7 +30,7 @@ def roadtrip_list(request, format=None):
         rooms=int(request_body["rooms"])
     )
     tracker = roadtrip.plan_trip()
-    return Response(tracker.serialize())
+    return Response([tracker.flights,tracker.hotels])
 
 
 class RoadtripData:
@@ -96,7 +96,8 @@ class RoadtripData:
         self.flightbudget = 0
 
         # after finding all our locations, we'll have to find a place to stay for every city
-        for index in range(1, len(self.tracker.flights) - 1):
+        print("length:", len(self.tracker.flights) - 1)
+        for index in range(len(self.tracker.flights) - 1):
             hotel = self.get_hotel(index)
             self.tracker.hotels.append(hotel)
 
@@ -189,18 +190,21 @@ class RoadtripData:
         departing_flight = self.tracker.flights[index + 1]
         departure_date = departing_flight["departure_flight"]
 
-        city_id = get_id(arriving_flight["to"])
-        current_hotelbudget = self.hotelbudget / ((len(self.tracker.flights) - 1) - len(self.tracker.hotels))
+        city_id = get_id(arriving_flight["to_destination"])
+        current_hotelbudget = self.hotelbudget #/ ((len(self.tracker.flights) - 1) - len(self.tracker.hotels))
 
         link = "https://gateway.skyscanner.net/hotels/v1/prices/search/entity/{}?market={}&locale={}" \
-               "&checkin_date={}&checkout_date={}&currency={}&adults={}&rooms={}&price_max={}&sort={}?apikey={}".format(
+               "&checkin_date={}&checkout_date={}&currency={}&adults={}&rooms={}&price_max={}&sort={}&apikey={}".format(
                 city_id, self.country, self.locale, arrival_date, departure_date, self.currency, self.rooms, self.adults,
-                current_hotelbudget, "rating", "7772cbd8f1a640ffa9536d96d4c3c48e")
+                int(current_hotelbudget), "rating", "7772cbd8f1a640ffa9536d96d4c3c48e")
+
+        print(link)
 
         hotels = requests.get(link, headers={"x-user-agent": "D;B2B"})
 
         while hotels.json()["meta"]["status"] != 'COMPLETED':
             hotels = requests.get(link)
+
 
         self.hotelbudget -= hotels.json()["results"]["hotels"][0]["offers"][0]["price"]
 
