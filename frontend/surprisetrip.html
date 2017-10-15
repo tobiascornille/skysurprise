@@ -35,7 +35,6 @@
     <script>
       function initMap() {
         var path = JSON.parse(sessionStorage.path);
-        console.log(path);
 
           var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 2,
@@ -53,9 +52,6 @@
             Lng.push(path[i].from_destination_long);
           }
 
-          console.log(Lat);
-          console.log(Lng);
-
 
 
           var symbolOne = {
@@ -71,6 +67,7 @@
             var pos = new google.maps.LatLng(Lat[i], Lng[i]);
             Poly.push(pos);
           }
+          Poly.push(new google.maps.LatLng(Lat[0], Lng[0]))
           for (var j = 0; j < Poly.length; j++) {
               var poly = Poly.slice(j, j + 2);
               var flowline = new google.maps.Polyline({

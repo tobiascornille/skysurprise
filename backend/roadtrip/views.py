@@ -106,10 +106,11 @@ class RoadtripData:
         return self.tracker
 
     def get_first_flight(self):
-        limit = 1000
-        radius = 10000
+        limit = 100000
+        radius = 1000000
         latitude = self.latitude
         longitude = self.longitude
+
         citiesrequest = requests.get('http://getnearbycities.geobytes.com/GetNearbyCities?callback=?&latitude={}&longitude={}&'
                               'radius={}&limit={}'.format(latitude, longitude, radius, limit))
         citiestext = citiesrequest.text[2:-2]
@@ -129,10 +130,12 @@ class RoadtripData:
 
         print("failed to find a first city")
 
+
     def get_flight(self, current_city, start_date):
         coordinates_json = requests.get('https://maps.googleapis.com/maps/api/geocode/json?address=current_city&key=AIzaSyDSKdFZz_MKA9lwh8kNvDPk9qLz0ocIkQ0')
         latitude = coordinates_json.json()['results'][0]['geometry']['location']['lat']
         longitude = coordinates_json.json()['results'][0]['geometry']['location']['lng']
+
 
         limit = 1000
         radius = 10000
@@ -157,6 +160,7 @@ class RoadtripData:
                         'price_flight': price}
         return None
 
+
     def get_last_flight(self, current_city, start_date):
         price, destination = self.get_connection_price(current_city, self.originplace, start_date)
 
@@ -168,7 +172,7 @@ class RoadtripData:
             return {'from_destination': current_city,
                     'to_destination': self.originplace,
                     'departure_flight': start_date,
-                    'arrival_flight': self.inbounddate,
+                    'arrival_flight': start_date,
                     'price_flight': price}
 
     def get_connection_price(self, source, destination, start_date):
