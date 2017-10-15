@@ -115,18 +115,18 @@ class RoadtripData:
                               'radius={}&limit={}'.format(latitude, longitude, radius, limit))
         citiestext = citiesrequest.text[2:-2]
         citieslist = eval(citiestext)
-
-        for city in citieslist:
-            city_name = city[1]
-            price, destination = self.get_connection_price(self.originplace, city_name, self.outbounddate)
-            if price != -1 and price <= self.flightbudget:
-                self.flightbudget -= price
-                print("found succesful a starting point")
-                return {'from_destination': self.originplace,
-                        'to_destination': city_name,
-                        'departure_flight': self.outbounddate,
-                        'arrival_flight': self.outbounddate,
-                        'price_flight': price}
+        if len(citieslist) != 0:
+            for city in citieslist:
+                city_name = city[1]
+                price, destination = self.get_connection_price(self.originplace, city_name, self.outbounddate)
+                if price != -1 and price <= self.flightbudget:
+                    self.flightbudget -= price
+                    print("found succesful a starting point")
+                    return {'from_destination': self.originplace,
+                            'to_destination': city_name,
+                            'departure_flight': self.outbounddate,
+                            'arrival_flight': self.outbounddate,
+                            'price_flight': price}
 
         print("failed to find a first city")
 
@@ -226,11 +226,12 @@ class RoadtripData:
                 hotels = requests.get(link, headers={"x-user-agent": "D;B2B"})
 
             if(hotels.json()["results"]["hotels"] != None):
-                self.hotelbudget -= hotels.json()["results"]["hotels"][0]["offers"][0]["price"]
+                if(hotels.json()["results"]["hotels"][0] != None):
+                    self.hotelbudget -= hotels.json()["results"]["hotels"][0]["offers"][0]["price"]
 
-                return {'hotel_link': hotels.json()["results"]["hotels"][0]["offers"][0]["deeplink"],
-                        'hotel_name': hotels.json()["results"]["hotels"][0]["name"],
-                        'price_hotel': hotels.json()["results"]["hotels"][0]["offers"][0]["price"]}
+                    return {'hotel_link': hotels.json()["results"]["hotels"][0]["offers"][0]["deeplink"],
+                            'hotel_name': hotels.json()["results"]["hotels"][0]["name"],
+                            'price_hotel': hotels.json()["results"]["hotels"][0]["offers"][0]["price"]}
 
         return {'hotel_link': '','hotel_name': '','price_hotel': ''}
 
