@@ -121,6 +121,7 @@ class RoadtripData:
             price = self.get_connection_price(self.originplace, city_name, self.outbounddate, end_date)
             if price != -1 and price <= self.flightbudget:
                 self.flightbudget -= price
+                print("found succesful a starting point")
                 return {'from_destination': self.originplace,
                         'to_destination': city_name,
                         'departure_flight': self.outbounddate,
@@ -159,24 +160,30 @@ class RoadtripData:
                     'price_flight': price}
 
     def get_connection_price(self, source, destination, start_date, end_date):
+        print("enter connection price")
         if destination + '\r' not in self.cities_overview:
+            print("hey")
             return -1
-
+        print("get flight price")
         return self.get_flight_price(source, destination, start_date)
 
     def get_flight_price(self, source, destination, date):
+        print(self.country)
+        print(self.currency)
+        print(self.locale, source, destination, date, self.apikey)
         link = ("http://partners.api.skyscanner.net/apiservices/browseroutes/v1.0/{}/{}/{}/{}/{}/{}/?apikey={}").format(
                 self.country, self.currency, self.locale, source, destination, date, self.apikey)
         flights = requests.get(link)
-
         price = -1
         max_iterations = 1000
         iteration = 0
+        print(flights.json()["Routes"])
         while (price == -1 and iteration < max_iterations):
             try:
                 price = flights.json()['Routes'][iteration]['Price']
             except:
                 price = -1
+            iteration += 1
         return price
 
     def get_hotel(self, index):
