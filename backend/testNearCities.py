@@ -19,7 +19,7 @@ def is_valid_city(city):
     return True
 
 def main():
-    print(get_nearest_city([41,2]))
+    print(get_nearest_city([50,0]))
 
 if __name__ == "__main__":
     main()
