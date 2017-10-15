@@ -89,7 +89,7 @@ class RoadtripData:
             obj_next_day = date_string_to_object(current_day)
 
         # return flight
-        self.tracker.flights.append(self.get_last_flight())
+        self.tracker.flights.append(self.get_last_flight(last_city,current_day))
 
         # add the remaining flight money to the hotel budget
         self.hotelbudget += self.flightbudget
@@ -100,6 +100,7 @@ class RoadtripData:
             hotel = self.get_hotel(index)
             self.tracker.hotels.append(hotel)
 
+        print(self.tracker)
         return self.tracker
 
     def get_first_flight(self):
