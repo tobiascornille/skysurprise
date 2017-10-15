@@ -65,7 +65,7 @@
 							<h2 style="width:100%">Flight from {{item.from_destination}} to {{item.to_destination}}</h2>
 							<p ng-if="item.price_flight != -1"><i>Price:</i> {{item.price_flight}} euro</p>
 							<p ng-if="item.price_flight == -1"><i>Price:</i> No price found</p>
-							<span class="cd-date">{{item.departure_flight}}</span>
+							<!-- <span class="cd-date">{{item.departure_flight}}</span> -->
 						</div> <!-- cd-timeline-content -->
 					</div> <!-- cd-timeline-block -->
 
@@ -78,7 +78,7 @@
 								<h2 style="width:100%">Hotel at {{item.hotel_name}} in {{item.to_destination}}</h2>
 								<p><i>Price:</i> {{item.price_hotel}} euro</p>
 								<a ng-click="readMore(item.hotel_link)" class="cd-read-more">Read more</a>
-								<span class="cd-date">{{item.arrival_flight}}</span>
+								<!-- <span class="cd-date">{{item.arrival_flight}}</span> -->
 								
 							</div> <!-- cd-timeline-content -->
 						</div> <!-- cd-timeline-block -->
