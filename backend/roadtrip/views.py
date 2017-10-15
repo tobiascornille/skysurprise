@@ -30,7 +30,7 @@ def roadtrip_list(request, format=None):
         rooms=int(request_body["rooms"])
     )
     tracker = roadtrip.plan_trip()
-    return Response([tracker.flights,tracker.hotels])
+    return Response(tracker.to_json())
 
 
 class RoadtripData:
@@ -238,10 +238,8 @@ class Tracker:
         output = []
         for idx in range(len(self.flights)):
             current = {}
-            current['from_destination_lat'], current['from_destination_long'] =
-                get_location(self.flights[idx]['from_destination']
-            current['to_destination_lat'], current['to_destination_long'] =
-                get_location(self.flights[idx]['to_destination']
+            current['from_destination_lat'], current['from_destination_long'] = get_location(self.flights[idx]['from_destination'])
+            current['to_destination_lat'], current['to_destination_long'] =  get_location(self.flights[idx]['to_destination'])
             current['departure_flight'] = self.flights[idx]['departure_flight']
             current['arrival_flight'] = self.flights[idx]['arrival_flight']
             current['price_flight'] = self.flights[idx]['price_flight']
