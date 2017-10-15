@@ -30,7 +30,7 @@ def roadtrip_list(request, format=None):
         rooms=int(request_body["rooms"])
     )
     tracker = roadtrip.plan_trip()
-    return Response(tracker)
+    return Response(tracker.serialize())
 
 
 class RoadtripData:
@@ -229,6 +229,9 @@ class Tracker:
 
     def get_last_city(self):
         return self.flights[-1]["to_destination"]
+
+    def serialize(self):
+        return []
 
 
 
