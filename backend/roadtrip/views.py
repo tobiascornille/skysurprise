@@ -24,13 +24,13 @@ def roadtrip_list(request, format=None):
             currency=lastRoadtrip.data['currency'],
             locale=lastRoadtrip.data['locale'],
             originplace=lastRoadtrip.data['originplace'],
-            destinationplace=lastRoadtrip.data['destinationplace'],
             outbounddate=lastRoadtrip.data['outbounddate'],
             inbounddate=lastRoadtrip.data['inbounddate'],
             adults=lastRoadtrip.data['adults'],
             budget=lastRoadtrip.data['budget'],
             rooms=lastRoadtrip.data['rooms'],
-            randomlocation='Brussels International'
+            longitude=lastRoadtrip.data['longitude'],
+            latitude=lastRoadtrip.data['latitude'],
         )
         roadtrip_data.plan_trip()
         return Response(lastRoadtrip.data)

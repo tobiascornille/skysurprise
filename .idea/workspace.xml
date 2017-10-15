@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="38148776-be4f-4dea-844e-e5f8b5f31dd9" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/roadtrip/views.py" afterPath="$PROJECT_DIR$/backend/roadtrip/views.py" />
     </list>
     <ignored path="hackupc.iws" />
@@ -25,7 +26,7 @@
       <file leaf-file-name="serializers.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/backend/roadtrip/serializers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
+            <state relative-caret-position="102">
               <caret line="7" column="42" selection-start-line="7" selection-start-column="42" selection-end-line="7" selection-end-column="42" />
               <folding />
             </state>
@@ -47,27 +48,15 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/backend/roadtrip/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="680">
-              <caret line="234" column="18" selection-start-line="234" selection-start-column="18" selection-end-line="234" selection-end-column="18" />
               <folding>
-                <element signature="e#455#1665#0" expanded="false" />
-                <element signature="e#1832#2491#0" expanded="false" />
-                <element signature="e#2526#4160#0" expanded="false" />
-                <element signature="e#4202#5248#0" expanded="false" />
-                <element signature="e#5319#5871#0" expanded="false" />
-                <element signature="e#5938#6462#0" expanded="false" />
-                <element signature="e#6551#6693#0" expanded="false" />
-                <element signature="e#6762#7295#0" expanded="false" />
-                <element signature="e#7337#8681#0" expanded="false" />
-                <element signature="e#8732#8774#0" expanded="false" />
-                <element signature="e#8816#8916#0" expanded="false" />
-                <element signature="e#8959#9063#0" expanded="false" />
-                <element signature="e#9102#9143#0" expanded="false" />
-                <element signature="e#9215#9443#0" expanded="false" />
-                <element signature="e#9486#9605#0" expanded="false" />
-                <element signature="e#9640#9915#0" expanded="false" />
-                <element signature="e#9944#10150#0" expanded="false" />
-                <marker date="1508025473015" expanded="false" signature="24:379" ph="import ..." />
+                <element signature="e#8802#8902#0" expanded="false" />
+                <element signature="e#8945#9049#0" expanded="false" />
+                <element signature="e#9088#9129#0" expanded="false" />
+                <element signature="e#9201#9429#0" expanded="false" />
+                <element signature="e#9472#9591#0" expanded="false" />
+                <element signature="e#9626#9901#0" expanded="false" />
+                <element signature="e#9930#10136#0" expanded="false" />
+                <marker date="1508026249779" expanded="false" signature="24:379" ph="import ..." />
               </folding>
             </state>
           </provider>
@@ -76,7 +65,7 @@
       <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/backend/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
+            <state relative-caret-position="340">
               <caret line="20" column="34" selection-start-line="20" selection-start-column="34" selection-end-line="20" selection-end-column="34" />
               <folding>
                 <element signature="e#641#682#0" expanded="true" />
@@ -400,7 +389,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="3" />
+      <option name="time" value="4" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -428,24 +417,14 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#455#1665#0" expanded="false" />
-            <element signature="e#1832#2491#0" expanded="false" />
-            <element signature="e#2526#4160#0" expanded="false" />
-            <element signature="e#4202#5248#0" expanded="false" />
-            <element signature="e#5319#5871#0" expanded="false" />
-            <element signature="e#5938#6462#0" expanded="false" />
-            <element signature="e#6551#6693#0" expanded="false" />
-            <element signature="e#6762#7295#0" expanded="false" />
-            <element signature="e#7337#8681#0" expanded="false" />
-            <element signature="e#8732#8774#0" expanded="false" />
-            <element signature="e#8816#8916#0" expanded="false" />
-            <element signature="e#8959#9063#0" expanded="false" />
-            <element signature="e#9102#9143#0" expanded="false" />
-            <element signature="e#9215#9443#0" expanded="false" />
-            <element signature="e#9486#9605#0" expanded="false" />
-            <element signature="e#9640#9915#0" expanded="false" />
-            <element signature="e#9944#10150#0" expanded="false" />
-            <marker date="1508025473015" expanded="false" signature="24:379" ph="import ..." />
+            <element signature="e#8802#8902#0" expanded="false" />
+            <element signature="e#8945#9049#0" expanded="false" />
+            <element signature="e#9088#9129#0" expanded="false" />
+            <element signature="e#9201#9429#0" expanded="false" />
+            <element signature="e#9472#9591#0" expanded="false" />
+            <element signature="e#9626#9901#0" expanded="false" />
+            <element signature="e#9930#10136#0" expanded="false" />
+            <marker date="1508026249779" expanded="false" signature="24:379" ph="import ..." />
           </folding>
         </state>
       </provider>
@@ -491,24 +470,14 @@
         <state relative-caret-position="168">
           <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
           <folding>
-            <element signature="e#455#1665#0" expanded="false" />
-            <element signature="e#1832#2491#0" expanded="false" />
-            <element signature="e#2526#4160#0" expanded="false" />
-            <element signature="e#4202#5248#0" expanded="false" />
-            <element signature="e#5319#5871#0" expanded="false" />
-            <element signature="e#5938#6462#0" expanded="false" />
-            <element signature="e#6551#6693#0" expanded="false" />
-            <element signature="e#6762#7295#0" expanded="false" />
-            <element signature="e#7337#8681#0" expanded="false" />
-            <element signature="e#8732#8774#0" expanded="false" />
-            <element signature="e#8816#8916#0" expanded="false" />
-            <element signature="e#8959#9063#0" expanded="false" />
-            <element signature="e#9102#9143#0" expanded="false" />
-            <element signature="e#9215#9443#0" expanded="false" />
-            <element signature="e#9486#9605#0" expanded="false" />
-            <element signature="e#9640#9915#0" expanded="false" />
-            <element signature="e#9944#10150#0" expanded="false" />
-            <marker date="1508025473015" expanded="false" signature="24:379" ph="import ..." />
+            <element signature="e#8802#8902#0" expanded="false" />
+            <element signature="e#8945#9049#0" expanded="false" />
+            <element signature="e#9088#9129#0" expanded="false" />
+            <element signature="e#9201#9429#0" expanded="false" />
+            <element signature="e#9472#9591#0" expanded="false" />
+            <element signature="e#9626#9901#0" expanded="false" />
+            <element signature="e#9930#10136#0" expanded="false" />
+            <marker date="1508026249779" expanded="false" signature="24:379" ph="import ..." />
           </folding>
         </state>
       </provider>
@@ -531,17 +500,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/backend/settings.py">
+    <entry file="file://$PROJECT_DIR$/backend/roadtrip/serializers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="102">
+          <caret line="7" column="42" selection-start-line="7" selection-start-column="42" selection-end-line="7" selection-end-column="42" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/backend/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state relative-caret-position="340">
           <caret line="20" column="34" selection-start-line="20" selection-start-column="34" selection-end-line="20" selection-end-column="34" />
           <folding>
             <element signature="e#641#682#0" expanded="true" />
@@ -549,10 +518,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/backend/roadtrip/serializers.py">
+    <entry file="file://$PROJECT_DIR$/backend/settings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="7" column="42" selection-start-line="7" selection-start-column="42" selection-end-line="7" selection-end-column="42" />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -569,27 +538,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/backend/roadtrip/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="680">
-          <caret line="234" column="18" selection-start-line="234" selection-start-column="18" selection-end-line="234" selection-end-column="18" />
           <folding>
-            <element signature="e#455#1665#0" expanded="false" />
-            <element signature="e#1832#2491#0" expanded="false" />
-            <element signature="e#2526#4160#0" expanded="false" />
-            <element signature="e#4202#5248#0" expanded="false" />
-            <element signature="e#5319#5871#0" expanded="false" />
-            <element signature="e#5938#6462#0" expanded="false" />
-            <element signature="e#6551#6693#0" expanded="false" />
-            <element signature="e#6762#7295#0" expanded="false" />
-            <element signature="e#7337#8681#0" expanded="false" />
-            <element signature="e#8732#8774#0" expanded="false" />
-            <element signature="e#8816#8916#0" expanded="false" />
-            <element signature="e#8959#9063#0" expanded="false" />
-            <element signature="e#9102#9143#0" expanded="false" />
-            <element signature="e#9215#9443#0" expanded="false" />
-            <element signature="e#9486#9605#0" expanded="false" />
-            <element signature="e#9640#9915#0" expanded="false" />
-            <element signature="e#9944#10150#0" expanded="false" />
-            <marker date="1508025473015" expanded="false" signature="24:379" ph="import ..." />
+            <element signature="e#8802#8902#0" expanded="false" />
+            <element signature="e#8945#9049#0" expanded="false" />
+            <element signature="e#9088#9129#0" expanded="false" />
+            <element signature="e#9201#9429#0" expanded="false" />
+            <element signature="e#9472#9591#0" expanded="false" />
+            <element signature="e#9626#9901#0" expanded="false" />
+            <element signature="e#9930#10136#0" expanded="false" />
+            <marker date="1508026249779" expanded="false" signature="24:379" ph="import ..." />
           </folding>
         </state>
       </provider>
