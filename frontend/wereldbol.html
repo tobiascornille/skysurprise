@@ -81,8 +81,11 @@
            // var markerCustom = WE.marker([e.latitude, e.longitude], 'logo-webglearth-white-100.png', 100, 24).addTo(earth);
     
             earth.panTo([e.latitude, e.longitude],  {animate: true, duration: 0.5});
-            data.longitude = e.longitude;
-            data.latitude = e.latitude;
+            data.longitude = 4;
+            data.latitude = 51;
+            data.country = "BE";
+            data.locale = "nl-NL";
+            data.currency = "EUR";
             anim = false;
             console.log(data);
 
@@ -93,47 +96,45 @@
               }
           }
 
-          var data2 = [
-                            {
-                                "from_destination_long":"51.98",
-                                "from_destination_lat":"21.98",
-                                "from_destination":"Brussels",
-                                "to_destination_long":"81.98",
-                                "to_destination_lat":"21.98",
-                                "to_destination":"Barcelona",
-                                "departure_flight":"2017-05-30",
-                                "arrival_flight":"2017-05-30",
-                                "price_flight": "25",
-                                "hotel_link":"http://www.google.com",
-                                "hotel_name":"Hilton",
-                                "price_hotel":"266",
-                                "checkout_hotel":"2017-05-30T06:50:00",
-                            },
-                            {
-                                "from_destination_long":"81.98",
-                                "from_destination_lat":"11.98",
-                                "from_destination":"Brussels",
-                                "to_destination_long":"81.98",
-                                "to_destination_lat":"21.98",
-                                "to_destination":"Barcelona",
-                                "departure_flight":"2017-05-30",
-                                "arrival_flight":"2017-05-30",
-                                "price_flight": "25",
-                                "hotel_link":"http://www.google.com",
-                                "hotel_name":"Hilton",
-                                "price_hotel":"255",
-                                "checkout_hotel":"2017-05-30T06:50:00",
-                            }]
+        //   var data2 = [
+        //                     {
+        //                         "from_destination_long":"51.98",
+        //                         "from_destination_lat":"21.98",
+        //                         "from_destination":"Brussels",
+        //                         "to_destination_long":"81.98",
+        //                         "to_destination_lat":"21.98",
+        //                         "to_destination":"Barcelona",
+        //                         "departure_flight":"2017-05-30",
+        //                         "arrival_flight":"2017-05-30",
+        //                         "price_flight": "25",
+        //                         "hotel_link":"http://www.google.com",
+        //                         "hotel_name":"Hilton",
+        //                         "price_hotel":"266",
+        //                     },
+        //                     {
+        //                         "from_destination_long":"81.98",
+        //                         "from_destination_lat":"11.98",
+        //                         "from_destination":"Brussels",
+        //                         "to_destination_long":"81.98",
+        //                         "to_destination_lat":"21.98",
+        //                         "to_destination":"Barcelona",
+        //                         "departure_flight":"2017-05-30",
+        //                         "arrival_flight":"2017-05-30",
+        //                         "price_flight": "25",
+        //                         "hotel_link":"http://www.google.com",
+        //                         "hotel_name":"Hilton",
+        //                         "price_hotel":"255",
+        //                     }]
 
-                            sessionStorage.path = JSON.stringify(data2);
+        //                     sessionStorage.path = JSON.stringify(data2);
                        
-                        setTimeout(function(){ window.location.href="surprisetrip.html"; },1000);
+        //                 setTimeout(function(){ window.location.href="surprisetrip.html"; },1000);
 
             $http.post('http://127.0.0.1:8000/questions/', data, config)
-                    .success(function (data, status, headers, config) {
-                        $scope.PostDataResponse = data;
+                    .success(function (data2, status, headers, config) {
+                        // $scope.PostDataResponse = data;
                         
-                            sessionStorage.path = JSON.stringify(data);
+                        sessionStorage.path = JSON.stringify(data2);
                        
                         setTimeout(function(){ window.location.href="surprisetrip.html"; },1000);
                         

@@ -88,8 +88,8 @@
 		 if(!$scope.inbounddate) {
 			 $scope.inbounddate = new Date();
 		 }
-		 var inb =   $scope.inbounddate.getFullYear() + "-" + ("0"+($scope.inbounddate.getMonth()+1)).slice(-2) + "-" + $scope.inbounddate.getDate();
-		 var outb =   $scope.outbounddate.getFullYear() + "-" + ("0"+($scope.outbounddate.getMonth()+1)).slice(-2) + "-" + $scope.outbounddate.getDate();
+		 var inb =   $scope.inbounddate.getFullYear() + "-" + ("0"+($scope.inbounddate.getMonth()+1)).slice(-2) + "-" + ("0"+($scope.inbounddate.getDate())).slice(-2);
+		 var outb =   $scope.outbounddate.getFullYear() + "-" + ("0"+($scope.outbounddate.getMonth()+1)).slice(-2) + "-" +  ("0"+($scope.outbounddate.getDate())).slice(-2);
           var data = {
               originplace: $scope.destinationplace.PlaceName,
               adults: $scope.adults,

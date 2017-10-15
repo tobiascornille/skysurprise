@@ -45,8 +45,7 @@ class RoadtripData:
         self.outbounddate = outbounddate
         self.inbounddate = inbounddate
         self.adults = adults
-        self.budget = budget
-        print(budget)
+        self.budget = budget*adults
         self.flightbudget = budget / 2
         self.hotelbudget = budget / 2
         self.rooms = rooms
@@ -54,7 +53,7 @@ class RoadtripData:
         self.apikey = 'prtl6749387986743898559646983194'
         self.tracker = Tracker()
 
-        with open("backend\city_names.pkl", 'rb') as f:
+        with open("backend/city_names.pkl", 'rb') as f:
             self.cities_overview = pickle.load(f)
 
     def plan_trip(self):
@@ -105,11 +104,13 @@ class RoadtripData:
         return self.tracker
 
     def get_first_flight(self):
-        limit = 100
+        limit = 1000
         radius = 10000
         latitude = self.latitude
         longitude = self.longitude
         print("lat: {} and lon: {}".format(latitude, longitude))
+        print('http://getnearbycities.geobytes.com/GetNearbyCities?callback=?&latitude={}&longitude={}&'
+                              'radius={}&limit={}'.format(latitude, longitude, radius, limit))
         citiesrequest = requests.get('http://getnearbycities.geobytes.com/GetNearbyCities?callback=?&latitude={}&longitude={}&'
                               'radius={}&limit={}'.format(latitude, longitude, radius, limit))
         citiestext = citiesrequest.text[2:-2]
@@ -161,7 +162,7 @@ class RoadtripData:
                     'price_flight': price}
 
     def get_connection_price(self, source, destination, start_date, end_date):
-        if destination + '\r' not in self.cities_overview:
+        if destination not in self.cities_overview:
             return -1
         return self.get_flight_price(source, destination, start_date)
 
@@ -176,7 +177,7 @@ class RoadtripData:
         iteration = 0
         while (price == -1 and iteration < max_iterations):
             try:
-                price = flights.json()['Quotes'][0]['MinPrice']
+                price = flights.json()['Quotes'][iteration]['MinPrice']
                 print(price)
             except:
                 price = -1
