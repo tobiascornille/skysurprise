@@ -130,7 +130,19 @@
                        
         //                 setTimeout(function(){ window.location.href="surprisetrip.html"; },1000);
 
-            $http.post('http://127.0.0.1:8000/questions/', data, config)
+            swal({
+				title: 'Let\'s generate a random roadtrip!',
+				customClass: 'popup',
+				timer:50000,
+				showCancelButton: true,
+				showLoaderOnConfirm: true,
+				imageUrl: 'airplane.png',
+				imageWidth: 200,
+				imageHeight: 200,
+				imageAlt: 'Custom image',
+				onOpen: function () {
+					swal.showLoading()
+                    $http.post('http://127.0.0.1:8000/questions/', data, config)
                     .success(function (data2, status, headers, config) {
                         // $scope.PostDataResponse = data;
                         
@@ -145,6 +157,16 @@
                             "<hr />headers: " + header +
                             "<hr />config: " + config;
                     })
+				
+				}}).then(
+				function () {},
+				// handling the promise rejection
+				function (dismiss) {
+					
+				
+				});
+
+           
         
         }
         earth.on('click', showInfo);
