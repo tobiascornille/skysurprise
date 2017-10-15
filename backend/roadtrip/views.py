@@ -164,16 +164,12 @@ class RoadtripData:
     def get_last_flight(self, current_city, start_date):
         price, destination = self.get_connection_price(current_city, self.originplace, start_date)
 
-        if price > self.flightbudget:
-            print("How did we let this happen? :(")
-            return None
-        else:
-            self.flightbudget -= price
-            return {'from_destination': current_city,
-                    'to_destination': self.originplace,
-                    'departure_flight': start_date,
-                    'arrival_flight': start_date,
-                    'price_flight': price}
+        self.flightbudget -= price
+        return {'from_destination': current_city,
+                'to_destination': self.originplace,
+                'departure_flight': start_date,
+                'arrival_flight': start_date,
+                'price_flight': price}
 
     def get_connection_price(self, source, destination, start_date):
         if destination + '\r' not in self.cities_overview:
