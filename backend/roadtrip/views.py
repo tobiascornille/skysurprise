@@ -258,3 +258,8 @@ def get_autosuggest_id(city_name):
     api_url = 'http://partners.api.skyscanner.net/apiservices/autosuggest/v1.0/BE/EUR/nl-NL?query=%s&apiKey=7772cbd8f1a640ffa9536d96d4c3c48e'
     resp = requests.get(api_url%city_name).json()
     return resp['Places'][0]['CityId']
+
+def get_country_id(city_name):
+    api_url = 'http://partners.api.skyscanner.net/apiservices/autosuggest/v1.0/BE/EUR/nl-NL?query=%s&apiKey=7772cbd8f1a640ffa9536d96d4c3c48e'
+    resp = requests.get(api_url%city_name).json()
+    return resp['Places'][0]['CountryId']
