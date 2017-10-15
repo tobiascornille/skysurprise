@@ -81,8 +81,8 @@
            // var markerCustom = WE.marker([e.latitude, e.longitude], 'logo-webglearth-white-100.png', 100, 24).addTo(earth);
     
             earth.panTo([e.latitude, e.longitude],  {animate: true, duration: 0.5});
-            data.longitude = 4;
-            data.latitude = 51;
+            data.longitude = e.longitude;
+            data.latitude = e.latitude;
             data.country = "BE";
             data.locale = "nl-NL";
             data.currency = "EUR";

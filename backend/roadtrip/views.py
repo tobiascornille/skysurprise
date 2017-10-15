@@ -189,29 +189,34 @@ class RoadtripData:
         arrival_date = arriving_flight["arrival_flight"]
 
         departing_flight = self.tracker.flights[index + 1]
-        departure_date = departing_flight["departure_flight"]
+        if departing_flight != None:
+            departure_date = departing_flight["departure_flight"]
 
-        city_id = get_id(arriving_flight["to_destination"])
-        current_hotelbudget = self.hotelbudget / ((len(self.tracker.flights) - 1) - len(self.tracker.hotels))
+            city_id = get_id(arriving_flight["to_destination"])
+            current_hotelbudget = self.hotelbudget / ((len(self.tracker.flights) - 1) - len(self.tracker.hotels))
 
-        link = "https://gateway.skyscanner.net/hotels/v1/prices/search/entity/{}?market={}&locale={}" \
-               "&checkin_date={}&checkout_date={}&currency={}&adults={}&rooms={}&price_max={}&sort={}&apikey={}".format(
-                city_id, self.country, self.locale, arrival_date, departure_date, self.currency, self.rooms, self.adults,
-                int(current_hotelbudget), "rating", "7772cbd8f1a640ffa9536d96d4c3c48e")
+            link = "https://gateway.skyscanner.net/hotels/v1/prices/search/entity/{}?market={}&locale={}" \
+                "&checkin_date={}&checkout_date={}&currency={}&adults={}&rooms={}&price_max={}&sort={}&apikey={}".format(
+                    city_id, self.country, self.locale, arrival_date, departure_date, self.currency, self.rooms, self.adults,
+                    int(current_hotelbudget), "rating", "7772cbd8f1a640ffa9536d96d4c3c48e")
 
-        print(link)
+            print(link)
 
-        hotels = requests.get(link, headers={"x-user-agent": "D;B2B"})
+            hotels = requests.get(link, headers={"x-user-agent": "D;B2B"})
 
-        while hotels.json()["meta"]["status"] != 'COMPLETED':
-            hotels = requests.get(link)
+            while hotels.json()["meta"]["status"] != 'COMPLETED':
+                hotels = requests.get(link, headers={"x-user-agent": "D;B2B"})
 
 
-        self.hotelbudget -= hotels.json()["results"]["hotels"][0]["offers"][0]["price"]
+            self.hotelbudget -= hotels.json()["results"]["hotels"][0]["offers"][0]["price"]
 
-        return {'hotel_link': hotels.json()["results"]["hotels"][0]["offers"][0]["deeplink"],
-                 'hotel_name': hotels.json()["results"]["hotels"][0]["name"],
-                 'price_hotel': hotels.json()["results"]["hotels"][0]["offers"][0]["price"]}
+            return {'hotel_link': hotels.json()["results"]["hotels"][0]["offers"][0]["deeplink"],
+                    'hotel_name': hotels.json()["results"]["hotels"][0]["name"],
+                    'price_hotel': hotels.json()["results"]["hotels"][0]["offers"][0]["price"]}
+        else:
+            return {'hotel_link': '',
+                    'hotel_name': '',
+                    'price_hotel': ''}
 
 
 class Tracker:
