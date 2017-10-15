@@ -155,7 +155,7 @@ class RoadtripData:
             return {'from_destination': current_city,
                     'to_destination': destination,
                     'departure_flight': start_date,
-                    'arrival_flight': end_date,
+                    'arrival_flight': start_date,
                     'price_flight': price}
 
     def get_last_flight(self, current_city, start_date):
@@ -169,7 +169,7 @@ class RoadtripData:
             return {'from_destination': current_city,
                     'to_destination': self.originplace,
                     'departure_flight': start_date,
-                    'arrival_flight': self.inbounddate,
+                    'arrival_flight': start_date,
                     'price_flight': price}
 
     def get_connection_price(self, source, destination, start_date, end_date):
