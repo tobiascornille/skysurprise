@@ -225,9 +225,7 @@ class RoadtripData:
             while hotels.json()["meta"]["status"] != 'COMPLETED':
                 hotels = requests.get(link, headers={"x-user-agent": "D;B2B"})
 
-            if(hotels.json()["results"]["hotels"][0] != None):
-                print(hotels.json())
-
+            if(hotels.json()["results"]["hotels"] != None):
                 self.hotelbudget -= hotels.json()["results"]["hotels"][0]["offers"][0]["price"]
 
                 return {'hotel_link': hotels.json()["results"]["hotels"][0]["offers"][0]["deeplink"],
