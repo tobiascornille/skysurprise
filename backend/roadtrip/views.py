@@ -15,6 +15,7 @@ import os,sys
 @api_view(['GET', 'POST'])
 def roadtrip_list(request, format=None):
     if request.method == 'GET':
+        print("GET")
         roadtrips = Roadtrip.objects.all()
         lastRoadtrip = RoadtripSerializer(Roadtrip.objects.last(), many=False)
 
@@ -33,6 +34,9 @@ def roadtrip_list(request, format=None):
             latitude=lastRoadtrip.data['latitude'],
         )
         roadtrip = roadtrip_data.plan_trip()
+        flights = roadtrip.flights()
+        for flight in flights:
+            print(flight)
         return Response(lastRoadtrip.data)
 
     elif request.method == 'POST':
@@ -68,11 +72,13 @@ class RoadtripData:
             self.cities_overview = pickle.load(f)
 
     def plan_trip(self):
+        print("start")
         current_day = self.inbounddate
+
         obj_inbounddate = date_string_to_object(current_day)
 
         first_flight = self.get_first_flight()
-
+        print("first flight")
         if(first_flight != None):
             self.tracker.flights.append(first_flight)
         else:
@@ -88,7 +94,7 @@ class RoadtripData:
         # keeping in mind that we also have to get home in time
         while (self.flightbudget - self.get_flight_price(last_city, self.originplace, self.inbounddate)) > 0 \
                 and obj_next_day < obj_inbounddate:
-
+            print("next flight")
             flight = self.get_flight(last_city, current_day, self.days_per_city)
             self.tracker.flights.append(flight)
             last_city = self.tracker.get_last_city()
@@ -108,7 +114,7 @@ class RoadtripData:
             hotel = self.get_hotel(index)
             self.tracker.hotels.append(hotel)
 
-    return self.tracker
+        return self.tracker
 
     def get_first_flight(self):
         limit = 100
@@ -121,11 +127,12 @@ class RoadtripData:
         citieslist = eval(citiestext)
 
         end_date = calculate_new_date(self.outbounddate, self.days_per_city)
-
+        print(citieslist)
         for city in citieslist:
+            print("next city")
             city_name = city[1]
             price = self.get_connection_price(self.originplace, city_name, self.outbounddate, end_date)
-            if price != -1 and price <= 0.25 * self.flightbudget:
+            if price != -1 and price <= self.flightbudget:
                 self.flightbudget -= price
                 return {'from_destination': self.originplace,
                         'to_destination': city_name,
