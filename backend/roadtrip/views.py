@@ -191,7 +191,7 @@ class RoadtripData:
         departure_date = departing_flight["departure_flight"]
 
         city_id = get_id(arriving_flight["to_destination"])
-        current_hotelbudget = self.hotelbudget #/ ((len(self.tracker.flights) - 1) - len(self.tracker.hotels))
+        current_hotelbudget = self.hotelbudget / ((len(self.tracker.flights) - 1) - len(self.tracker.hotels))
 
         link = "https://gateway.skyscanner.net/hotels/v1/prices/search/entity/{}?market={}&locale={}" \
                "&checkin_date={}&checkout_date={}&currency={}&adults={}&rooms={}&price_max={}&sort={}&apikey={}".format(
