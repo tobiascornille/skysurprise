@@ -9,43 +9,28 @@ import requests
 import pickle
 from datetime import datetime, timedelta
 import os,sys
+import json
 
 
 
-@api_view(['GET', 'POST'])
+@api_view(['POST'])
 def roadtrip_list(request, format=None):
-    if request.method == 'GET':
-        print("GET")
-        roadtrips = Roadtrip.objects.all()
-        lastRoadtrip = RoadtripSerializer(Roadtrip.objects.last(), many=False)
-
-        # Initialize roadtrip data
-        roadtrip_data = RoadtripData(
-            country=lastRoadtrip.data['country'],
-            currency=lastRoadtrip.data['currency'],
-            locale=lastRoadtrip.data['locale'],
-            originplace=lastRoadtrip.data['originplace'],
-            outbounddate=lastRoadtrip.data['outbounddate'],
-            inbounddate=lastRoadtrip.data['inbounddate'],
-            adults=lastRoadtrip.data['adults'],
-            budget=lastRoadtrip.data['budget'],
-            rooms=lastRoadtrip.data['rooms'],
-            longitude=lastRoadtrip.data['longitude'],
-            latitude=lastRoadtrip.data['latitude'],
-        )
-        roadtrip = roadtrip_data.plan_trip()
-        flights = roadtrip.flights()
-        for flight in flights:
-            print(flight)
-        return Response(lastRoadtrip.data)
-
-    elif request.method == 'POST':
-        serializer = RoadtripSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    request_body = json.loads(request.body)
+    roadtrip = RoadtripData(
+        country=request_body["country"],
+        currency=request_body["currency"],
+        locale=request_body["locale"],
+        originplace=request_body["originplace"],
+        longitude=float(request_body["longitude"]),
+        latitude=float(request_body["latitude"]),
+        outbounddate=request_body["outbounddate"],
+        inbounddate=request_body["inbounddate"],
+        adults=int(request_body["adults"]),
+        budget=float(request_body["budget"]),
+        rooms=int(request_body["rooms"])
+    )
+    tracker = roadtrip.plan_trip()
+    return Response(tracker)
 
 
 class RoadtripData:
@@ -61,6 +46,7 @@ class RoadtripData:
         self.inbounddate = inbounddate
         self.adults = adults
         self.budget = budget
+        print(budget)
         self.flightbudget = budget / 2
         self.hotelbudget = budget / 2
         self.rooms = rooms
@@ -121,6 +107,7 @@ class RoadtripData:
         radius = 10000
         latitude = self.latitude
         longitude = self.longitude
+        print("lat: {} and lon: {}".format(latitude, longitude))
         citiesrequest = requests.get('http://getnearbycities.geobytes.com/GetNearbyCities?callback=?&latitude={}&longitude={}&'
                               'radius={}&limit={}'.format(latitude, longitude, radius, limit))
         citiestext = citiesrequest.text[2:-2]
@@ -129,7 +116,7 @@ class RoadtripData:
         end_date = calculate_new_date(self.outbounddate, self.days_per_city)
         print(citieslist)
         for city in citieslist:
-            print("next city")
+            print(city[1])
             city_name = city[1]
             price = self.get_connection_price(self.originplace, city_name, self.outbounddate, end_date)
             if price != -1 and price <= self.flightbudget:
