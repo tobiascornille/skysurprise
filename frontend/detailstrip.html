@@ -58,7 +58,7 @@
 						</div> <!-- cd-timeline-img -->
 			
 						<div class="cd-timeline-content">
-							<h2 style="width:100%">Flight from {{item.from_destination_placename}} to {{item.to_destination_placename}}</h2>
+							<h2 style="width:100%">Flight from {{item.from_destination}} to {{item.to_destination}}</h2>
 							<p><i>Price:</i> {{item.price_flight}} euro</p>
 							<span class="cd-date">{{item.departure_flight}}</span>
 						</div> <!-- cd-timeline-content -->
@@ -70,7 +70,7 @@
 							</div> <!-- cd-timeline-img -->
 				
 							<div class="cd-timeline-content">
-								<h2 style="width:100%">Hotel at {{item.hotel_name}} in {{item.to_destination_placename}}</h2>
+								<h2 style="width:100%">Hotel at {{item.hotel_name}} in {{item.to_destination}}</h2>
 								<p><i>Price:</i> {{item.price_hotel}} euro</p>
 								<a ng-href="{{item.hotel_link}}" class="cd-read-more">Read more</a>
 								<span class="cd-date">{{item.arrival_flight}}</span>
