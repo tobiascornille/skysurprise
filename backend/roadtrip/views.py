@@ -32,7 +32,7 @@ def roadtrip_list(request, format=None):
             longitude=lastRoadtrip.data['longitude'],
             latitude=lastRoadtrip.data['latitude'],
         )
-        roadtrip_data.plan_trip()
+        roadtrip = roadtrip_data.plan_trip()
         return Response(lastRoadtrip.data)
 
     elif request.method == 'POST':
@@ -102,11 +102,13 @@ class RoadtripData:
         # add the remaining flight money to the hotel budget
         self.hotelbudget += self.flightbudget
         self.flightbudget = 0
-        
+
         # after finding all our locations, we'll have to find a place to stay for every city
         for index in range(1, len(self.tracker.flights) - 1):
             hotel = self.get_hotel(index)
             self.tracker.hotels.append(hotel)
+
+    return self.tracker
 
     def get_first_flight(self):
         limit = 100
@@ -121,11 +123,12 @@ class RoadtripData:
         end_date = calculate_new_date(self.outbounddate, self.days_per_city)
 
         for city in citieslist:
-            price = self.get_connection_price(self.originplace, city, self.outbounddate, end_date)
+            city_name = city[1]
+            price = self.get_connection_price(self.originplace, city_name, self.outbounddate, end_date)
             if price != -1 and price <= 0.25 * self.flightbudget:
                 self.flightbudget -= price
                 return {'from_destination': self.originplace,
-                        'to_destination': city,
+                        'to_destination': city_name,
                         'departure_flight': self.outbounddate,
                         'arrival_flight': end_date,
                         'price_flight': price}
@@ -165,7 +168,7 @@ class RoadtripData:
         if destination + '\r' not in self.cities_overview:
             return -1
 
-        return self.get_flightprice(source, destination, start_date)
+        return self.get_flight_price(source, destination, start_date)
 
     def get_flight_price(self, source, destination, date):
         link = ("http://partners.api.skyscanner.net/apiservices/browseroutes/v1.0/{}/{}/{}/{}/{}/{}/?apikey={}").format(
@@ -215,13 +218,13 @@ class Tracker:
         self.hotels = []
         self.flights = []
 
-    def get_hotels_price(self):
+    def get_hotels_cost(self):
         sum = 0
         for hotel in self.hotels:
             sum += hotel["price_hotel"]
         return sum
 
-    def get_flights_price(self):
+    def get_flights_cost(self):
         sum = 0
         for flight in self.flights:
             sum += flight["price_flight"]
@@ -243,6 +246,7 @@ def calculate_new_date(start_date, nb_days):
 def date_string_to_object(str_date):
     str_date = str_date.split('-')
     date = datetime(year=int(str_date[0]), month=int(str_date[1]), day=int(str_date[2]))
+    return date
 
 def get_location(city_name):
     api_url = 'http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=true'
