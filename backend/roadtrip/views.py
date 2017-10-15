@@ -123,21 +123,25 @@ class RoadtripData:
             end_date = calculate_new_date(self.outbounddate, self.days_per_city)
             print(citieslist)
             for city in citieslist:
-                city_name = city[1]
-                price = self.get_connection_price(self.originplace, city_name, self.outbounddate, end_date)
-                if price != -1 and price <= self.flightbudget:
-                    self.flightbudget -= price
-                    print("found succesful a starting point")
-                    no_first_flight = False
-                    return {'from_destination': self.originplace,
-                            'to_destination': city_name,
-                            'departure_flight': self.outbounddate,
-                            'arrival_flight': end_date,
-                            'price_flight': price}
+                if self.index_exists(city,1):
+                    city_name = city[1]
+                    price = self.get_connection_price(self.originplace, city_name, self.outbounddate, end_date)
+                    if price != -1 and price <= self.flightbudget:
+                        self.flightbudget -= price
+                        print("found succesful a starting point")
+                        no_first_flight = False
+                        return {'from_destination': self.originplace,
+                                'to_destination': city_name,
+                                'departure_flight': self.outbounddate,
+                                'arrival_flight': end_date,
+                                'price_flight': price}
 
             print("failed to find a first city")
             longitude = 28.1235192803
             latitude = 40.2799057614
+
+    def index_exists(self, ls, i):
+        return (0 <= i < len(ls)) or (-len(ls) <= i < 0)
 
     def get_flight(self, current_city, start_date, nb_days):
         end_date = calculate_new_date(start_date, nb_days)
