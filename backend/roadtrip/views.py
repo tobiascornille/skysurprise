@@ -52,7 +52,7 @@ class RoadtripData:
         self.rooms = rooms
         self.days_per_city = 3
         self.apikey = 'prtl6749387986743898559646983194'
-        self.tracker = Tracker
+        self.tracker = Tracker()
 
         with open("backend\city_names.pkl", 'rb') as f:
             self.cities_overview = pickle.load(f)
@@ -89,7 +89,7 @@ class RoadtripData:
             obj_next_day = date_string_to_object(current_day)
 
         # return flight
-        self.tracker.flights.append(self.get_last_flight())
+        self.tracker.flights.append(self.get_last_flight(last_city,current_day))
 
         # add the remaining flight money to the hotel budget
         self.hotelbudget += self.flightbudget
@@ -100,6 +100,7 @@ class RoadtripData:
             hotel = self.get_hotel(index)
             self.tracker.hotels.append(hotel)
 
+        print(self.tracker)
         return self.tracker
 
     def get_first_flight(self):
@@ -116,11 +117,11 @@ class RoadtripData:
         end_date = calculate_new_date(self.outbounddate, self.days_per_city)
         print(citieslist)
         for city in citieslist:
-            print(city[1])
             city_name = city[1]
             price = self.get_connection_price(self.originplace, city_name, self.outbounddate, end_date)
             if price != -1 and price <= self.flightbudget:
                 self.flightbudget -= price
+                print("found succesful a starting point")
                 return {'from_destination': self.originplace,
                         'to_destination': city_name,
                         'departure_flight': self.outbounddate,
@@ -161,22 +162,24 @@ class RoadtripData:
     def get_connection_price(self, source, destination, start_date, end_date):
         if destination + '\r' not in self.cities_overview:
             return -1
-
         return self.get_flight_price(source, destination, start_date)
 
     def get_flight_price(self, source, destination, date):
-        link = ("http://partners.api.skyscanner.net/apiservices/browseroutes/v1.0/{}/{}/{}/{}/{}/{}/?apikey={}").format(
-                self.country, self.currency, self.locale, source, destination, date, self.apikey)
+        print(get_autosuggest_id(source), get_autosuggest_id(destination))
+        link = ("http://partners.api.skyscanner.net/apiservices/browsequotes/v1.0/{}/{}/{}/{}/{}/{}/?apikey={}").format(
+                self.country, self.currency, self.locale, get_autosuggest_id(source), get_autosuggest_id(destination), date, self.apikey)
+        print(link)
         flights = requests.get(link)
-
         price = -1
         max_iterations = 1000
         iteration = 0
         while (price == -1 and iteration < max_iterations):
             try:
-                price = flights.json()['Routes'][iteration]['Price']
+                price = flights.json()['Quotes'][0]['MinPrice']
+                print(price)
             except:
                 price = -1
+            iteration += 1
         return price
 
     def get_hotel(self, index):
@@ -258,3 +261,8 @@ def get_autosuggest_id(city_name):
     api_url = 'http://partners.api.skyscanner.net/apiservices/autosuggest/v1.0/BE/EUR/nl-NL?query=%s&apiKey=7772cbd8f1a640ffa9536d96d4c3c48e'
     resp = requests.get(api_url%city_name).json()
     return resp['Places'][0]['CityId']
+
+def get_country_id(city_name):
+    api_url = 'http://partners.api.skyscanner.net/apiservices/autosuggest/v1.0/BE/EUR/nl-NL?query=%s&apiKey=7772cbd8f1a640ffa9536d96d4c3c48e'
+    resp = requests.get(api_url%city_name).json()
+    return resp['Places'][0]['CountryId']
