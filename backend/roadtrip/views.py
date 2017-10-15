@@ -116,7 +116,6 @@ class RoadtripData:
         end_date = calculate_new_date(self.outbounddate, self.days_per_city)
         print(citieslist)
         for city in citieslist:
-            print(city[1])
             city_name = city[1]
             price = self.get_connection_price(self.originplace, city_name, self.outbounddate, end_date)
             if price != -1 and price <= self.flightbudget:
@@ -160,27 +159,22 @@ class RoadtripData:
                     'price_flight': price}
 
     def get_connection_price(self, source, destination, start_date, end_date):
-        print("enter connection price")
         if destination + '\r' not in self.cities_overview:
-            print("hey")
             return -1
-        print("get flight price")
         return self.get_flight_price(source, destination, start_date)
 
     def get_flight_price(self, source, destination, date):
-        print(self.country)
-        print(self.currency)
-        print(self.locale, source, destination, date, self.apikey)
-        link = ("http://partners.api.skyscanner.net/apiservices/browseroutes/v1.0/{}/{}/{}/{}/{}/{}/?apikey={}").format(
-                self.country, self.currency, self.locale, source, destination, date, self.apikey)
+        print(get_autosuggest_id(source), get_autosuggest_id(destination))
+        link = ("http://partners.api.skyscanner.net/apiservices/browserquotes/v1.0/{}/{}/{}/{}/{}/{}/?apikey={}").format(
+                self.country, self.currency, self.locale, get_autosuggest_id(source), get_autosuggest_id(destination), date, self.apikey)
         flights = requests.get(link)
         price = -1
         max_iterations = 1000
         iteration = 0
-        print(flights.json()["Routes"])
         while (price == -1 and iteration < max_iterations):
             try:
-                price = flights.json()['Routes'][iteration]['Price']
+                price = flights.json()['Quotes'][0]['MinPrice']
+                print(price)
             except:
                 price = -1
             iteration += 1
